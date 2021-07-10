@@ -11,9 +11,3 @@ six==1.15.0
 sqlparse==0.4.1
 virtualenv==20.4.3
 whitenoise==5.2.0
-gunicorn==19.7.1
-whitenoise==5.2.0
-django-cors-headers==3.7.0
-djangorestframework>=3.12.4
-sklearn>=0.24.0
-gensim>=3.8.1
