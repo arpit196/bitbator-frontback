@@ -1,0 +1,38 @@
+ {
+  "securityToken": "{\"Initiator-Authorization\":\"Bearer eyJ4NXQjUzI1NiI6InBXY3hGZVJ1dm1oTW5GOXBOQTgtdGFGX0RzZDFENXZiUnVGN0NwMmpxZHc9IiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJQYXJ0eU9yZ2FuaXphdGlvblVzZXIiLCJyb2xlcyI6WyJEMVBfR2VvZ3JhcGhpY0FkZHJlc3NNYW5hZ2VtZW50X3dyaXRlIiwiRDFQX1ByaXZhY3lDb25maWdfcmVhZCIsIkQxUF9QbGFjZU1hbmFnZW1lbnRfcmVhZCIsIkQxUF9QYXJ0eU1hbmFnZW1lbnRfcmVhZCIsIkQxUF9HZW9ncmFwaGljQWRkcmVzc01hbmFnZW1lbnRfcmVhZCIsIlNlcnZpY2VBcHBJZGVudGl0eVJvbGUiLCJEMVBfUGFydHlNYW5hZ2VtZW50X3dyaXRlIiwiRDFfUGFydHlNYW5hZ2VtZW50X3VwZGF0ZU9yZ2FuaXphdGlvblN0YXR1cyIsIkQxUF9DdXN0b21lck1hbmFnZW1lbnRfcmVhZCIsIkQxUF9BY2NvdW50TWFuYWdlbWVudF93cml0ZSIsIkQxUF9QYXJ0eU1hbmFnZW1lbnRfRXhfd3JpdGUiLCJEMVBfUGF5bWVudE1ldGhvZF9kZWxldGUiLCJTVFMtQ29tbW9uIiwiRDFQX1ByaXZhY3lNYW5hZ2VtZW50X3JlYWQiLCJEMV9QYXJ0eU1hbmFnZW1lbnRfc2VhcmNoSW5kaXZpZHVhbCIsIkQxUF9DdXN0b21lclByZWZlcmVuY2VfZGVsZXRlIiwiRDFfQWNjb3VudE1hbmFnZW1lbnRfc2VhcmNoRmluYW5jaWFsQWNjb3VudCIsIkQxX0FjY291bnRNYW5hZ2VtZW50X3NlYXJjaEJpbGxpbmdBY2NvdW50IiwiRDFQX0N1c3RvbWVyTWFuYWdlbWVudF9FeF93cml0ZSIsIkFzbVNlcnZpY2VzQXBwSWRlbnRpdHkiLCJEMVBfU2VhcmNoTWFuYWdlbWVudF9FeF9yZWFkIiwiRDFfQ3VzdG9tZXJNYW5hZ2VtZW50X3NlYXJjaEN1c3RvbWVyIiwiRDFQX1BheW1lbnRNZXRob2RfcmVhZCIsIkQxUF9QYXltZW50TWV0aG9kX3dyaXRlIiwiRDFQX0N1c3RvbWVyTWFuYWdlbWVudF9FeF9yZWFkIiwiRDFfQWNjb3VudE1hbmFnZW1lbnRfRXhfcmV0cmlldmVBdXRvUGF5RGV0YWlscyIsIkQxUF9BY2NvdW50TWFuYWdlbWVudF9kZWxldGUiLCJEMVBfUGFydHlJbnRlcmFjdGlvbl93cml0ZSIsIkQxUF9QYXJ0eU1hbmFnZW1lbnRfRXhfcmVhZCIsIkQxUF9DdXN0b21lck1hbmFnZW1lbnRfZGVsZXRlIiwiRDFQX0dlb2dyYXBoaWNBZGRyZXNzTWFuYWdlbWVudF9FeF9yZWFkIiwiRDFQX0N1c3RvbWVyUHJlZmVyZW5jZV9yZWFkIiwiRDFQX0FjY291bnRNYW5hZ2VtZW50X0V4X3JlYWQiLCJEMVBfQWNjb3VudE1hbmFnZW1lbnRfcmVhZCIsIkQxUF9IaXN0b3J5TWFuYWdlbWVudF9yZWFkIiwiRDFQX0FjY291bnRNYW5hZ2VtZW50X0V4X3dyaXRlIiwiQW5vbnltb3VzVXNlclJvbGUiLCJEMVBfQ3VzdG9tZXJQcmVmZXJlbmNlX3dyaXRlIiwiRDFQX1ByaXZhY3lNYW5hZ2VtZW50X3dyaXRlIiwiRDFfUGFydHlNYW5hZ2VtZW50X3VwZGF0ZVRheEV4ZW1wdGlvbiIsIkQxUF9QYXJ0eUludGVyYWN0aW9uX3JlYWQiLCJQQVAtQ29tbW9uIiwiRDFQX0N1c3RvbWVyTWFuYWdlbWVudF9zZWFyY2giLCJEMVBfUGFydHlNYW5hZ2VtZW50X2RlbGV0ZSIsIkQxUF9DdXN0b21lck1hbmFnZW1lbnRfd3JpdGUiLCJEMV9TZWFyY2hNYW5hZ2VtZW50X3NlYXJjaEV4cGVyaWVuY2UiLCJEMV9QYXJ0eU1hbmFnZW1lbnRfdXBkYXRlU3RhdHVzIiwiRDFfUGF5bWVudE1ldGhvZF9jcmVhdGVQYXltZW50TWV0aG9kIiwiRDFQX1NlYXJjaE1hbmFnZW1lbnRfcmVhZCIsIkQxUF9QYXJ0eUludGVyYWN0aW9uX2RlbGV0ZSIsImFkZE9yZ2FuaXphdGlvblJlbGF0ZWRQYXJ0eVRvSW5kaXZpZHVhbCIsIkQxX1BhcnR5TWFuYWdlbWVudF9BZGRPcmdhbml6YXRpb25SZWxhdGlvbnNoaXAiLCJEMVBfUGFydHlPcmdhbml6YXRpb25fc2VhcmNoIiwiRDFQX09yZ2FuaXphdGlvbkFjY2Vzc29yX3JlYWQiLCJEMV9QYXJ0eU1hbmFnZW1lbnRfTWVyZ2VDdXN0b21lckhpZXJhcmNoeSIsIkQxX1BhcnR5TWFuYWdlbWVudF9WYWxpZGF0ZU1vdmVPcmdhbml6YXRpb24iLCJEMVBfUGFydHlNYW5hZ2VtZW50X3ZhbGlkYXRlTW92ZSIsIkQxX1BhcnR5TWFuYWdlbWVudF9NZXJnZU9yZ2FuaXphdGlvbiIsIkQxUF9QYXJ0eU1hbmFnZW1lbnRfbWVyZ2UiLCJEMVBfR2VvZ3JhcGhpY0FkZHJlc3NNYW5hZ2VtZW50X2RlbGV0ZSIsIkQxUF9DdXN0b21lck1hbmFnZW1lbnRfd3JpdGVDcm9zc0N1c3RvbWVySW5kaWNhdG9ycyIsIkQxUF9Ucm91YmxlVGlja2V0X3JlYWQiLCJEMVBfQ3VzdG9tZXJNYW5hZ2VtZW50X3VwZGF0ZVN0YXR1cyIsIkQxUF9Db250YWN0TWVkaXVtX2NyZWF0ZSIsIkQxX1BhcnR5TWFuYWdlbWVudF9nZXRSZWZlcmVuY2VEYXRhIiwiRm5kUF9BUElHYXRld2F5X2d3IiwiRDFQX1BhcnR5TWFuYWdlbWVudF93cml0ZVZhbGlkYXRlTWFuYWdlT3JnYW5pemF0aW9uUmVsYXRpb25zaGlwIiwiRDFQX1BhcnR5T3JnYW5pemF0aW9uX3dyaXRlIiwiRDFQX1BhcnR5T3JnYW5pemF0aW9uX3JlYWQiLCJEMVBfUGFydHlPcmdhbml6YXRpb25fZGVsZXRlIiwiRDFfTWFzc09wZXJhdGlvbkpvYl9pbml0aWF0ZSJdLCJpc3MiOiJjYXJlLWRldi1tYXN0ZXJAQTNTLmFtZG9jcy5jb20iLCJvaXQiOjE2MjMwNDQyMDQsInNhbGVzQ2hhbm5lbCI6IkNhbGxDZW50ZXIiLCJleHAiOjE2MjMwNTE0MDQsImlhdCI6MTYyMzA0NDIwNCwidHRsIjoxNjIzMDczMDA0LCJqdGkiOiI4NDY0NWZiNmYxNmZlOTEyN2M0YzJkMmFmYmQ5MTIzYThlYmU2OGM2MDQ0ZTFiNzkyNTNmMGQyYzQ2NGFkNTI4In0.NU8s7ELI7hYKtx-puFkhG-imVLxE9Nb91jWMepNAXMwhT5fEBYU8eYRrguJDVwe2uSKkjuEuRVqPZi1HcLOIiMeV-90ts_q7vmqDviRX3VcbPNWhYXHLSkrv3Cf1cwWvGOyo2Rrl7Xy4oogVpatAMAVGwR_ITjouGNNp8A1GDb57yarY3tz7jpjsl1yqoYyxELgoivJVu37J9gvvHL99dtwhoOM-fAjp46It7j-mbXGpSeAsm_RrAvHIhlzFJmiemlzqPNi-BbXUQnr8rzNdkXVtPrBdLhpyNjR-woaq-iHpx7Fi2rVa1zMsC1pSdA9UVovXfKWeBFwPLK03W2lgdg\"}",
+  "eventType": "JobExecutionNotification",
+  "eventId": "JobExecutionNotification-zRjGDD5HhKsFQHXnkdUnPA\u003d\u003d",
+  "eventTime": "2021-05-29T09:00:02.885408Z",
+  "eventClass": "com.amdocs.digital.ms.digitalmass.notification.asyncmessages.implementation.JobExecutionNotification",
+  "deprecated": false,
+  "event": {
+    "messageKey": "MassContext_d9e96c0d-700a-447a-972d-0a80bba2531d",
+    "jobExecutionEvent": {
+      "type": "End",
+      "subType": "Job",
+      "activityTime": "2021-05-29T09:00:02.883298Z",
+      "massId": "MassContext_d9e96c0d-700a-447a-972d-0a80bba2531d",
+      "massContextType": "detach",
+      "massContextSubtype": "cancel",
+      "jobExecutionContext": {
+        "jobId": "39",
+        "jobName": "DetachOrgnizationCareEntities",
+        "jobInstanceId": "99",
+        "startDate": "2021-05-29T09:00:02.656Z",
+        "endDate": "2021-05-29T09:00:02.882Z",
+        "additionalInfo": [
+          {
+            "name": "inputfileName",
+            "value": "organization_e0e05fe5-a58b-497e-ae52-657012c89d1d.csv"
+          },
+          {
+            "name": "task.id",
+            "value": "ManageOrganizationRelationship_509207446012444762"
+          }
+        ]
+      }
+    }
+  },
+  "domain": "digitalmass"
+} 
+ 

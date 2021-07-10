@@ -1,0 +1,25 @@
+.close{
+    right:0px;
+    float: right;
+    width:fit-content;
+}
+
+.tag{
+    width: fit-content;
+    height: fit-content; 
+    margin-top: auto;
+    margin-bottom: auto;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 30px;
+}
+
+.tag-info{
+    margin-right: 2px;
+}
+
+.tag-item{
+    display:flex; flex-direction:row;
+}

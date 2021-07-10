@@ -1,0 +1,87 @@
+.rowC{display:flex; flex-direction:row; margin-left:7%; padding-top: 20px;}
+.center {
+    margin: auto;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+.sidebarmain
+{
+    display: flex;
+    flex-direction: row;
+    float:left;
+    width:215px;
+    height:auto;
+    border: solid 2px black;
+    background-color: white;
+  }
+
+  .circle {
+    background-color:rgb(255, 0, 0);
+    color: white;    
+    height:25px;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width:25px;
+}
+
+.modal-content{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid #444;
+  border-radius: .3rem;
+  outline: 0;
+}
+
+.ModalOpen { overflow: hidden; }
+
+.is-hidden { display: none; }
+
+.is-visuallyHidden { opacity: 0; }
+
+.is-blurred {
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+}
+
+.is_shown{
+  filter:unset;
+  -webkit-filter:unset;
+}
+
+.boldFont{
+  font-weight: 600;
+}
+
+a{
+  font-weight: bolder
+}
+
+a:hover{
+  text-decoration: underline;
+}
+
+.Modal{
+  position: fixed;
+  top: 40%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  z-index: 1060;
+}
+
+.ui.label{
+  background-color: rgb(10, 80, 230);
+	height: fit-content;
+	border-radius: 30px;
+	padding: 3px
+}
+
+.ui.label:hover{
+  background-color: rgb(10, 80, 230);
+}

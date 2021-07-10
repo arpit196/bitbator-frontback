@@ -1,0 +1,22 @@
+.Login{
+    color: 'white';
+    background: 'white';
+    max-width: '400px';
+    top: '50px';
+    position: 'absolute'
+}
+
+.Loginform{
+    margin: '0 auto';
+    max-width: '320px';
+}
+
+body label{
+    font-weight: 600px;
+    text-align: 'left';
+}
+
+.ui.form .field>label{
+    text-align: left;
+    margin-top: 10px;
+}

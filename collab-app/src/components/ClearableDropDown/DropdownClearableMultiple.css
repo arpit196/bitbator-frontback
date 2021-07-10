@@ -1,0 +1,27 @@
+  .ui.dropdown {
+    max-width: 800px;
+  }
+  
+  @media only screen and (max-width: 767px) {
+      .ui.selection.dropdown .menu {
+  /*      max-height: 8.01428571rem; /* + 1.335714285 to 9.349999995rem */
+  /*      max-height: 9.349999995rem; /* Adds a half */
+          max-height: 16.02857142rem; /* Double size */
+      }
+  }
+  @media only screen and (min-width: 768px) {
+      .ui.selection.dropdown .menu {
+  /*         max-height: 10.68571429rem; /* + 1.3357142863 to 12.0214285763rem */
+        max-height: 12.0214285763rem;
+      }
+  }
+  @media only screen and (min-width: 992px) {
+      .ui.selection.dropdown .menu {
+        max-height: 16.02857143rem; /* + 1.3357142858 to 17.3642857158rem */
+      }
+  }
+  @media only screen and (min-width: 1920px) {
+      .ui.selection.dropdown .menu {
+          max-height: 21.37142857rem; /* + 1.3357142856 to 22.7071428556rem */
+      }
+  }

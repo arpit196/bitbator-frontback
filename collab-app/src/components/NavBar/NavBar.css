@@ -1,0 +1,49 @@
+.circle {
+    background-color:rgb(255, 0, 0);
+    color: white;    
+    height:25px;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    width:25px;
+}
+
+.navbar-proj{
+    background-color: "black"; color: "black"; padding: "10px"
+}
+
+.active{
+    color: white;
+	border-bottom: 5px solid orange;
+    border-color: orange
+}
+
+.navDrop{
+    color: white;
+    background-color: rgb(126, 126, 126);
+    border-radius: 50%;
+}
+
+.navDrop:hover{
+    color: grey;
+    background-color: rgb(114, 110, 110);
+}
+
+.navDrop::after{
+    content: none;
+}
+
+.bigPlus{
+    font-size: 150px;
+    font-weight: 800;
+    width: 50px;
+    height: 50px;
+}
+
+.mergedback{
+    background-color: 'black'
+}
+
+.dropdown-toggle{
+    background-color: 'black'
+}
