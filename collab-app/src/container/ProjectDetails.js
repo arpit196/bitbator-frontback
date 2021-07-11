@@ -128,7 +128,7 @@ class ProjectDetails extends Component {
         http,
         dir,
         corsProxy: 'https://cors.isomorphic-git.org',
-        url: 'https://github.com/arpit196/song_rec_sys',
+        url: `https://github.com/${window.currentUser}/${this.props.name}`,
         ref: 'master',
         singleBranch: false,
         depth: 10,
@@ -180,7 +180,7 @@ class ProjectDetails extends Component {
     }
 
     getRequests(){
-      this.gitSetup()
+      //this.gitSetup()
       fetch("http://127.0.0.1:8000/project/" + this.props.name + "/request")
       .then(response => {     
         return response.json();  
@@ -630,7 +630,10 @@ class ProjectDetails extends Component {
             </div>
           :
           <div>
-            <Button onClick={this.editTags} style={{align: 'right', margin: '10px', height: '44px'}}>Change Tags</Button>
+            {
+              this.state.users.includes(window.currentUser)?(<Button onClick={this.editTags} style={{align: 'right', margin: '10px', height: '44px'}}>Change Tags</Button>)
+              : ''
+            }
             <div class="rowC">{this.state.project.tags?.map(tag => {
               return (<Tags name={tag.name} delete={false}></Tags>)
             })}</div>

@@ -318,9 +318,18 @@ class LoginView(APIView):
 
 	def post(self, request):
 		serializer = LoginSerializer(data=request.data)
-		user = Profile.objects.get(username=request.data["username"])
-		if user.password != request.data["password"]:
-			raise Exception("Invalid username or password")
+		response = {}
+
+		try:
+			user = Profile.objects.get(username=request.data["username"])
+		except Profile.DoesNotExist:
+			user = None
+			response = {"error": "Invalid username"}
+			return Response(response)
+			
+		if user and user.password != request.data["password"]:
+			#raise Exception("Invalid username or password")
+			response = {"error": "Invalid password"}
 		response = {"name" : user.name, "password" : user.password, "username": user.username}
 		return Response(response)
 	

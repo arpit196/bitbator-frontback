@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import '../App.js';
 import { autoBind } from 'react-autobind/lib/autoBind'
+import Urlify from 'urlify'
+import Linkify from 'react-linkify';
 
 class ProjectDiscussions extends Component {
     state = {
@@ -14,6 +16,16 @@ class ProjectDiscussions extends Component {
       requests: [],
       inputValue: ''
     }
+
+    /*urlify = Urlify.create(
+      {
+        addEToUmlauts:true,
+        szToSs:true,
+        spaces:"_",
+        nonPrintable:"_",
+        trim:true
+      }
+    )*/
     
     constructor(props){
       super(props)
@@ -93,7 +105,7 @@ class ProjectDiscussions extends Component {
     publishMessage(e){
       e.preventDefault();
       this.setState({inputValue: ""})
-      const msg = this.urlify(this.state.inputValue)
+      const msg = this.state.inputValue
       publish("notifications-channel", {message: msg, user: window.currentUser ,project:this.props.project})
       fetch("http://127.0.0.1:8000/project/" + this.props.project + "/discussions", {  method: "POST",  headers: {    "Content-type": "application/json"  }, body: JSON.stringify({   message: msg, user: window.currentUser  })})
       .then(response => {    
@@ -123,7 +135,7 @@ class ProjectDiscussions extends Component {
                      :
                      <Card.Header style={{backgroundColor: 'RGB(37,211,102)', borderColor: 'RGB(37,211,102)', color: 'grey', width: '800px', textAlign: 'left', borderRadius: '10px', marginRight: '10px'}}>{discussion.user}</Card.Header>
                      }
-                     <div>{this.urlify(discussion.message)}</div>
+                     <div><Linkify>{discussion.message}</Linkify></div>
                     </Card>        
                    })
                   }

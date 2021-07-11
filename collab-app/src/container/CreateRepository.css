@@ -5,3 +5,16 @@
 label{
     color: "white"
 }
+
+.form-check{
+    margin: 20px
+}
+
+.form-label{
+    margin: 10px;
+    font-weight: bold
+}
+
+.form-group{
+    margin: 5px;
+}

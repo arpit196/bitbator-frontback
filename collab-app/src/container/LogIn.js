@@ -33,12 +33,12 @@ class LogIn extends React.Component {
     logInForm = ()=>{
         return (<div className="Login" >
                     {this.state.errors.length>0?
-                        (<Card style={{background: 'pink', borderColor: 'red'}}>{this.state.errors[0]}</Card>)
+                        (<Card style={{background: 'pink', borderColor: 'red', marginBottom: '20px'}}>{this.state.errors[0]}</Card>)
                     :
                         ''
                     }
-                    <Card style={{background: 'white', maxWidth: '480px', margin: 'auto'}}>
-                        <Card.Header style={{background: '#034afc'}}>
+                    <Card style={{top: '20%', left: '34%', position: 'absolute', background: 'white', width: '600px', margin: 'auto'}}>
+                        <Card.Header style={{background: '#034afc', borderRadius: '5px'}}>
                             Sign In to Collab.
                         </Card.Header>
 
@@ -53,7 +53,7 @@ class LogIn extends React.Component {
                             <Input onChange={this.handleOnChangePass} type="password" id='password' name="password" placeholder="write your password"/>
                         </Form.Field>
                         <Button style={{margin: '20px'}} type="submit" onClick={this.logInSubmitted}>Submit</Button>
-                        <Card>Don't have an account yet on Collab? <Link to='/signin' onClick={this.signUp}>Sign Up</Link></Card>
+                        <Card style={{color: 'white'}}>Don't have an account on Collab? <Link to='/signin' onClick={this.signUp}>Sign Up</Link></Card>
                         </Form>
                     </Card>
                 </div>)
@@ -118,6 +118,7 @@ class LogIn extends React.Component {
     logInSubmitted = (event) => {
         event.preventDefault()
         // console.log("derya is life")
+        console.log(this.state.username+" "+this.state.password)
         fetch("http://127.0.0.1:8000/login/", {
             method: 'POST',
             headers: {
@@ -134,10 +135,14 @@ class LogIn extends React.Component {
        .then(res => res.json())
        .then(data => {
            console.log(data)
-           if (data.errors) {
+           if (data.error) {
                console.log(data)
+               this.setState({
+                   errors: this.state.errors.concat(data.error)
+               })
            }else{
                //this.props.setToken(data.token, data.user_id)
+               console.log(data)
                window.currentUser = data.name
                this.props.history.push('/dashboard')
            }
