@@ -15,7 +15,6 @@ import tensorflow_hub as hub
 import gensim.downloader as api
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
-import tensorflow_text as text
 import re
 #import model from modelTrain
 import math
