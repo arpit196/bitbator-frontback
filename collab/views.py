@@ -107,6 +107,7 @@ class UserView(APIView):
 	def patch(self, request, name):
 		user_object = User.objects.filter(name=str(name)).first()
 		print(user_object)
+		print("Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
 		data = request.data
 		#serializer = ReactSerializer(data=request.data)
 		project=None

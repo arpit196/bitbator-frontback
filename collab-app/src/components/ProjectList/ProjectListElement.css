@@ -170,4 +170,5 @@
 .project-title:hover{
 	opacity: 1;
 	bottom: 2px;
+	cursor: pointer;
 }

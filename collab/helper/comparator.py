@@ -15,7 +15,7 @@ import tensorflow_hub as hub
 import gensim.downloader as api
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
-import tensorflow_text as text
+#import tensorflow_text as text
 import re
 #import model from modelTrain
 import math
@@ -31,8 +31,8 @@ import math
 #import official.nlp.modeling.models
 #import official.nlp.modeling.networks
 
-preprocess = hub.load('https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/1')
-encoder = hub.load('https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-256_A-4/2')
+#preprocess = hub.load('https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/1')
+#encoder = hub.load('https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-256_A-4/2')
 dataset = api.load("text8")
 dct = Dictionary(dataset)
 corpus = [dct.doc2bow(line, allow_update=True) for line in dataset]
@@ -106,14 +106,15 @@ def compareUser(input, user, tags):
                 if(word == word2):
                     score = score + val*val2
         
-        print("Hi")
+        '''
         pooled_input = encoder(input2)["pooled_output"]
         pooled_project = encoder(project)["pooled_output"]
+        '''
 
-        MLscore = cosine_similarity(pooled_input, pooled_project)
+        #MLscore = cosine_similarity(pooled_input, pooled_project)
         
         if(score>maxScoreProject):
-            maxScoreProject = score + MLscore
+            maxScoreProject = score #+ MLscore
     
     #compare Interests
     for collab in user.collab :
@@ -133,13 +134,15 @@ def compareUser(input, user, tags):
             if tag in user.tags:
                 score=score+1
         
+        '''
         pooled_input = encoder(input2)["pooled_output"]
         pooled_project = encoder(description)["pooled_output"]
 
         MLscore = cosine_similarity(pooled_input, pooled_project)
-                
+        '''
+
         if(score>maxScoreCollab):
-            maxScoreCollab = score + MLscore
+            maxScoreCollab = score #+ MLscore
     
     return maxScoreProject + maxScoreCollab
 
@@ -210,9 +213,6 @@ def compare(input, project, tags):
         for (word2, val2) in project_matrix:
             if(word == word2):
                 score = score + val*val2'''
-    
-    print(input2_word)
-    print(project_name_word)
     for word in input2_word:
         if word in project_name_word:
             #if(word.lower() == word2.lower()):
@@ -227,10 +227,13 @@ def compare(input, project, tags):
 
     #tags_match = predict_tags(project, filtered_tags)
 
+    '''
     pooled_input = encoder(input2)["pooled_output"]
     pooled_project = encoder(project)["pooled_output"]
+    '''
 
-    score = score + cosine_similarity(pooled_input, pooled_project) + tag_score
+    #score = score + cosine_similarity(pooled_input, pooled_project) + tag_score
+    score = score + tag_score
 
     '''sentence1 = tf.ragged.constant([
         encode_sentence(project.name+" "+project.description)])

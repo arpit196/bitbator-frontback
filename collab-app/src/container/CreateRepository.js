@@ -19,6 +19,7 @@ import Navbar2 from '../components/NavBar/NavBar2'
 import LightningFS from '@isomorphic-git/lightning-fs'
 import http from 'isomorphic-git/http/web/index'
 //import git from 'isomorphic-git'
+import './CreateRepository.css'
 
 const animatedComponents = makeAnimated();
 document.body.style.background = "white";
@@ -117,7 +118,15 @@ class CreateRepository extends Component {
             user: userData[0]
         }, console.log(this.state.user))
         })
-        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ name: this.state.name, description:this.state.description, user: this.currentUser })})
+        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name })})
+        .then(res => res.json())
+        .then(userData => {
+        console.log(userData[0])
+        this.setState({
+            user: userData[0]
+        }, console.log(this.state.user))
+        })
+        fetch('http://127.0.0.1:8000/user/'+ window.currentUser, {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name, description:this.state.description })})
         .then(res => res.json())
         .then(userData => {
         console.log(userData[0])
@@ -144,7 +153,7 @@ class CreateRepository extends Component {
         console.log(sha)*/
 
         let formData = new FormData()
-        formData.append('owner', this.currentUser)
+        formData.append('owner', window.currentUser)
         formData.append('repository[name]', this.state.name)
         formData.append('repository[description]', this.state.description)
         formData.append('repository[public]', 'public')
@@ -313,7 +322,7 @@ class CreateRepository extends Component {
                 <h1>Create a new Repository</h1>
                 <Form>
                     <Form.Field>
-                        <label style={{textAlign:'center'}}>Admins</label>
+                        <label style={{textAlign:'center'}}>Users</label>
                         <div style={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
                             {/*<MultiSearchSelect searchable={true} showTags={true} multiSelect={true} width="500px" onSelect={this.showOptions} options={this.options}/>*/}
                             <Select
@@ -327,7 +336,7 @@ class CreateRepository extends Component {
                                 value={this.state.selectedAdmins}
                             />
                         </div>
-                        <Button style={{marginTop : '8px'}} onClick={this.addadmins}>Add admins</Button>
+                        <Button style={{marginTop : '8px'}} onClick={this.addadmins}>Add users</Button>
                         <div class="rowC">
                         {this.state.projectAdmins.map( tag => {
                                 return (<Tags style={{display: 'flex', margin: 'auto', justifyContent: 'center'}} deleteTags={()=>this.deleteAdmin(tag)} name={tag.name} delete={true}></Tags>)

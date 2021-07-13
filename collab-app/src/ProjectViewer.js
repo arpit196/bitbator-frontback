@@ -475,8 +475,18 @@ class ProjectViewer extends Component {
       console.log(this.state.tagInput)
     }
 
-    getNewRequests(project){
-      return 0;
+    getNewProjectRequests(project){
+      var result = 0
+      fetch('http://127.0.0.1:8000/project/'+ project.name +'/requests')
+      .then(res => res.json())
+      .then(requestsData => {
+        console.log(requestsData)
+        this.setState({
+         //requests: this.state.requests.concat(requestsData)
+        })
+        result = requestsData
+       })
+       return result
     }
 
     onInputChange(e){
@@ -552,7 +562,7 @@ class ProjectViewer extends Component {
                       <h3>Your Repositories:</h3>
                         {this.currentUser.projects.length < 5 ? 
                           this.currentUser.projects && this.currentUser.projects.map(project => {
-                          return (<div class="rowC boldFont" style={{marginLeft: '50px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p>{this.getNewRequests(project)}</p></div></div>)
+                          return (<div class="rowC boldFont" style={{marginLeft: '50px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{0}</p></div></div>)
                         })
                         :
                           this.currentUser.projects && this.currentUser.projects.slice(0,5).map(project => {
