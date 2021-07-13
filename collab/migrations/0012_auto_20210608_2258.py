@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='access',
-            field=models.CharField(default=builtins.all, max_length=200),
+            field=models.CharField(default="all", max_length=200),
             preserve_default=False,
         ),
         migrations.AddField(
