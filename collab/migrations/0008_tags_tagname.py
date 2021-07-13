@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tags',
             name='tagName',
-            field=models.CharField(default=builtins.any, max_length=200),
+            field=models.CharField(max_length=200),
             preserve_default=False,
         ),
     ]
