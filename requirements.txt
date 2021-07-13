@@ -20,4 +20,3 @@ gensim>=3.8.1
 matplotlib==3.4.2
 tensorflow-cpu==2.5.0
 tensorflow-hub==0.12.0
-tensorflow-text==2.5.0
