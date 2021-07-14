@@ -8,5 +8,9 @@
   },
   "scripts": {
     "start": "npm start --prefix ./collab-app"
+  },
+  "dependencies": {
+    "react-scripts": "^4.0.3",
+    "react": "^17.0.2"
   }
 }
