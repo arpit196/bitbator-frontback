@@ -7,8 +7,7 @@
     "npm": ">=7.9.0"
   },
   "scripts": {
-    "start": "npm start --prefix ./collab-app",
-    "prestart": "cd collab-app && npm install"
+    "start": "npm start --prefix ./collab-app"
   },
   "dependencies": {
     "react-scripts": "^4.0.3"
