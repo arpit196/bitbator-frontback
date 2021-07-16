@@ -6,10 +6,11 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-import tensorflow as tf
+'''import tensorflow as tf
 from tensorflow import keras
 
 import tensorflow_hub as hub
+'''
 #tfds.disable_progress_bar()
 
 import gensim.downloader as api
