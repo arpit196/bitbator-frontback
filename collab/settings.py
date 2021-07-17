@@ -59,6 +59,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_WHITELIST = [
+    'https://localhost:3000',
+]
+
+# Option 2
+CORS_ORIGIN_ALLOW_ALL = True
+
 ROOT_URLCONF = 'collab.urls'
 
 TEMPLATES = [
