@@ -531,6 +531,7 @@ class ProjectDetails extends Component {
     deleteRepo(){
       fetch('http://127.0.0.1:8000/project/'+this.props.name, { method: "DELETE"})
       .then(res => res.json())
+      this.props.history.push('/dashboard')
     }
 
     switchTab(){

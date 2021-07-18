@@ -212,7 +212,7 @@ return (
 				<div class="rowC">
 				{window.currentUser?
 				<NavBtn>
-				<NavBtnLink style={{borderRadius: '50%'}} to={'/user/' + window.currentUser}>Profile</NavBtnLink>
+				<NavBtnLink style={{borderRadius: '50%', marginBottom: '20px'}} to={'/user/' + window.currentUser}>Profile</NavBtnLink>
 				</NavBtn>
 				:''
 				}
@@ -229,8 +229,8 @@ return (
 					}
 				</Dropdown.Menu>
 				{window.currentUser && typeof window.currentUser === "string"?
-				<Dropdown style={{marginLeft: '100px'}}>
-					<Dropdown.Toggle className="navDrop bigPlus" onClickCapture={()=>changeSeen()} ><FaPlus/></Dropdown.Toggle>
+				<Dropdown style={{marginLeft: '100px', marginBottom: '10px'}}>
+					<Dropdown.Toggle style={{marginTop: '-8px'}} className="navDrop bigPlus" onClickCapture={()=>changeSeen()} ><FaPlus/></Dropdown.Toggle>
 					<Dropdown.Menu>
 						<Dropdown.Item eventKey="1" href={'/repository'}>Create Repository</Dropdown.Item>	
 					</Dropdown.Menu>

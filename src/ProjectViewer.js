@@ -550,7 +550,7 @@ class ProjectViewer extends Component {
             </div>
             <div id="project-viewer" className="main">
               <div className={"project-container"}>
-                  <div style={{color: "white", fontSize: "medium", fontWeight: '600'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications}/></div>
+                  <div style={{color: "white", fontSize: "medium", fontWeight: '600', marginLeft:'100px'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications}/></div>
                   <span></span>
                   <div>
                     <div class="rowC">
