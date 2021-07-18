@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
+from django.views.generic import TemplateView
 from .views import *
 from . import views
 
@@ -37,5 +38,6 @@ urlpatterns = [
     path('project/<str:name>', ProjectView.as_view()),
     path('compare/', views.compareProjects),
     path('tags/', TagView.as_view()),
-    path('login/', LoginView.as_view())
+    path('login/', LoginView.as_view()),
+    path('dashboard/', TemplateView.as_view(template_name='index.html'))
 ]
