@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9cd105e8.chunk.css",
+    "main.js": "/static/js/main.6583e398.chunk.js",
+    "main.js.map": "/static/js/main.6583e398.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.e899b318.js",
+    "runtime-main.js.map": "/static/js/runtime-main.e899b318.js.map",
+    "static/css/2.d409463d.chunk.css": "/static/css/2.d409463d.chunk.css",
+    "static/js/2.78f18807.chunk.js": "/static/js/2.78f18807.chunk.js",
+    "static/js/2.78f18807.chunk.js.map": "/static/js/2.78f18807.chunk.js.map",
+    "static/js/3.9a609c83.chunk.js": "/static/js/3.9a609c83.chunk.js",
+    "static/js/3.9a609c83.chunk.js.map": "/static/js/3.9a609c83.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.d409463d.chunk.css.map": "/static/css/2.d409463d.chunk.css.map",
+    "static/css/main.9cd105e8.chunk.css.map": "/static/css/main.9cd105e8.chunk.css.map",
+    "static/js/2.78f18807.chunk.js.LICENSE.txt": "/static/js/2.78f18807.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/static/media/outline-icons.ddae9b1b.woff",
+    "static/media/chat-icon.f032be1d.svg": "/static/media/chat-icon.f032be1d.svg",
+    "static/media/logo-no-bg.4d881dc9.svg": "/static/media/logo-no-bg.4d881dc9.svg",
+    "static/media/logo.6ce24c58.svg": "/static/media/logo.6ce24c58.svg",
+    "static/media/notification.aa8f8c40.mp3": "/static/media/notification.aa8f8c40.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e899b318.js",
+    "static/css/2.d409463d.chunk.css",
+    "static/js/2.78f18807.chunk.js",
+    "static/css/main.9cd105e8.chunk.css",
+    "static/js/main.6583e398.chunk.js"
+  ]
+}
