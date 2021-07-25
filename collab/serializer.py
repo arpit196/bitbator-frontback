@@ -29,6 +29,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('projects', 'name', 'description', 'seenNotifications',)
 
+class UserCreateSerializer(serializers.ModelSerializer):
+    projects = ReactSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('name', 'description')
+
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
@@ -53,3 +59,8 @@ class DiscussionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discussions
         fields = ['message','user', 'project',]
+
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageField
+        fields = ['user','image','url',]

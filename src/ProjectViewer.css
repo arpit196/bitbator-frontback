@@ -57,6 +57,7 @@
 
 .boldFont{
   font-weight: 600;
+  font-family: system-ui;
 }
 
 a{
@@ -69,10 +70,15 @@ a:hover{
 
 .Modal{
   position: fixed;
-  top: 40%;
-  left: 40%;
+  top: 30%;
+  left: 45%;
   transform: translate(-50%, -50%);
   z-index: 1060;
+}
+
+.fixedDiv{
+  position: 'fixed';
+  margin: 'auto'
 }
 
 .ui.label{
@@ -84,4 +90,11 @@ a:hover{
 
 .ui.label:hover{
   background-color: rgb(10, 80, 230);
+}
+
+#dropdown-basic {
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 5px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 5px;
 }

@@ -6,17 +6,17 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-'''import tensorflow as tf
+import tensorflow as tf
 from tensorflow import keras
 
 import tensorflow_hub as hub
-'''
+
 #tfds.disable_progress_bar()
 
 import gensim.downloader as api
 from gensim.models import TfidfModel
 from gensim.corpora import Dictionary
-#import tensorflow_text as text
+import tensorflow_text as text
 import re
 #import model from modelTrain
 import math
@@ -32,8 +32,8 @@ import math
 #import official.nlp.modeling.models
 #import official.nlp.modeling.networks
 
-#preprocess = hub.load('https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/1')
-#encoder = hub.load('https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-256_A-4/2')
+preprocess = hub.load('https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/1')
+encoder = hub.load('https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-256_A-4/2')
 dataset = api.load("text8")
 dct = Dictionary(dataset)
 corpus = [dct.doc2bow(line, allow_update=True) for line in dataset]

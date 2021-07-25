@@ -66,10 +66,12 @@ class Message(models.Model):
 
 class ImageField(models.Model):
     user = models.CharField(max_length=30)
-    image = models.ImageField()
+    image = models.ImageField(upload_to='user_images')
     url = models.CharField(max_length=255, unique=True)
+    def __str__(self):
+        return self.title
 
-    def cache(self):
+    '''def cache(self):
         """Store image locally if we have a URL"""
         if self.url and not self.photo:
             result = urllib.urlretrieve(self.url)
@@ -77,5 +79,5 @@ class ImageField(models.Model):
                     os.path.basename(self.url),
                     File(open(result[0], 'rb'))
                     )
-            self.save()
+            self.save()'''
     

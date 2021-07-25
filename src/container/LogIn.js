@@ -33,13 +33,13 @@ class LogIn extends React.Component {
     logInForm = ()=>{
         return (<div className="Login" >
                     {this.state.errors.length>0?
-                        (<Card style={{background: 'pink', borderColor: 'red', marginBottom: '20px'}}>{this.state.errors[0]}</Card>)
+                        (<Card style={{background: 'pink', borderColor: 'red', marginBottom: '20px', width: '600px', left: '34%'}}>{this.state.errors[0]}</Card>)
                     :
                         ''
                     }
                     <Card style={{top: '20%', left: '34%', position: 'absolute', background: 'white', width: '600px', margin: 'auto'}}>
                         <Card.Header style={{background: '#034afc', borderRadius: '5px'}}>
-                            Sign In to Collab.
+                            Sign In to BitBator.
                         </Card.Header>
 
                         <Form className="Login">
@@ -52,7 +52,7 @@ class LogIn extends React.Component {
                             <label htmlFor="password" className="password">Password:</label>
                             <Input onChange={this.handleOnChangePass} type="password" id='password' name="password" placeholder="write your password"/>
                         </Form.Field>
-                        <Button style={{margin: '20px'}} type="submit" onClick={this.logInSubmitted}>Submit</Button>
+                        <Button style={{margin: '20px', backgroundColor: 'orange'}} type="submit" onClick={this.logInSubmitted}>Sign In</Button>
                         <Card style={{color: 'white'}}>Don't have an account on Collab? <Link to='/signin' onClick={this.signUp}>Sign Up</Link></Card>
                         </Form>
                     </Card>
@@ -137,9 +137,11 @@ class LogIn extends React.Component {
            console.log(data)
            if (data.error) {
                console.log(data)
-               this.setState({
-                   errors: this.state.errors.concat(data.error)
-               })
+               if(this.state.errors.length == 0){
+                this.setState({
+                    errors: this.state.errors.concat(data.error)
+                })
+               }
            }else{
                //this.props.setToken(data.token, data.user_id)
                console.log(data)
@@ -197,7 +199,27 @@ class LogIn extends React.Component {
                 errors: this.state.errors.concat(error)
             })
        })
-       
+       fetch("http://127.0.0.1:8000/users/", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+           },
+           body: JSON.stringify(
+               {
+                name: this.state.name,
+                descrption: this.state.description,
+                projects: {},
+               }
+           )
+        }).then(res => res.json())
+        .then(data => {
+            if (data.errors) {
+             this.setState({
+                 errors: data.errors
+             })
+            }
+        })
     }
     
 

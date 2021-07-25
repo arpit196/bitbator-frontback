@@ -210,7 +210,7 @@ return (
 			</NavMenu>
 			<Dropdown  /*as={ButtonGroup}*/>
 				<div class="rowC">
-				{window.currentUser?
+				{window.currentUser && !(props.noProfile === true)?
 				<NavBtn>
 				<NavBtnLink style={{borderRadius: '50%', marginBottom: '20px'}} to={'/user/' + window.currentUser}>Profile</NavBtnLink>
 				</NavBtn>

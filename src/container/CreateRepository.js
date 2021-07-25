@@ -39,7 +39,10 @@ class CreateRepository extends Component {
         selectedTags: [],
         sortedUsers: [],
         selectedAdmins: [],
-        access: ''
+        access: '',
+        tag_options : [
+            {label: "tag", value: "Machine L"}, {tag: "tag", value: "Developer"}
+        ]
     }
 
     option_list = [
@@ -47,9 +50,6 @@ class CreateRepository extends Component {
         {label: 'English', value: 'English'},
     ];
 
-    tag_options = [
-        {label: "tag", value: "Machine L"}, {tag: "tag", value: "Developer"}
-    ]
     options = [
         "abc", "def", "ghi", "ljk"
     ];
@@ -68,6 +68,19 @@ class CreateRepository extends Component {
         console.log(window)
         window.dir = '/newRepo'
         this.gitSetup = this.gitSetup.bind(this)
+        this.getAllTags = this.getAllTags.bind(this)
+        this.getAllTags()
+    }
+
+    getAllTags(){
+        fetch('http://127.0.0.1:8000/tags/')
+        .then(res => res.json())
+        .then(tags => {
+          tags.map(tag=>{
+            var tagName = tag.name
+            this.setState({tag_options: this.state.tag_options.concat({key: tagName, value: tagName})})
+          })
+        })
     }
 
     async gitSetup(){
@@ -365,7 +378,7 @@ class CreateRepository extends Component {
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
                                 isMulti
-                                options={this.tag_options}
+                                options={this.state.tag_options}
                                 onChange={this.showTagOptions}
                                 onInputChange={(e) => this.manualAddedTag(e)}
                                 value={this.state.selectedTags}
@@ -411,7 +424,7 @@ class CreateRepository extends Component {
                                 label={"Connected to me"}
                                 onChange={()=>this.changeAccess("connections")}>
                     </FormRadio.Check>
-                    <Form.Button onClick={this.createRepo}>Create Repository</Form.Button>
+                    <Form.Button style={{color:'white', backgroundColor: 'black', marginBottom: '30px'}} onClick={this.createRepo}>Create Repository</Form.Button>
                 </Form>
             </div>
         )

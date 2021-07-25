@@ -33,11 +33,12 @@ urlpatterns = [
     path('user/<str:user>/notifications', NotificationsView.as_view()),
     path('project/<str:name>/users', views.getProjectUsers),
     path('project/<str:name>/user', ProjectView.as_view()),
-    path('project/<str:name>/request', views.getProjectRequests),
+    path('project/<str:name>/requests', RequestView.as_view()),
     path('project/<str:name>/discussions', DiscussionsView.as_view()),
     path('project/<str:name>', ProjectView.as_view()),
     path('compare/', views.compareProjects),
     path('tags/', TagView.as_view()),
     path('login/', LoginView.as_view()),
+    path('image/', ImageView.as_view()),
     path('dashboard/', TemplateView.as_view(template_name='index.html'))
 ]

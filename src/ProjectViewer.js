@@ -4,7 +4,7 @@ import ProjectListElement from './components/ProjectList/ProjectListElement'
 import ProjectDetails from './container/ProjectDetails'
 import { Dropdown as Dropdown1 } from 'react-bootstrap'
 import Navbar2 from './components/NavBar/NavBar2'
-import { Dropdown as Dropdown2 } from 'semantic-ui-react'
+import { Dropdown as Dropdown2, TextArea } from 'semantic-ui-react'
 import 'semantic-ui-css/semantic.min.css'
 import './ProjectViewer.css'
 import { publish, subscribe } from 'pubsub-js'
@@ -29,6 +29,7 @@ class ProjectViewer extends Component {
       ],
       tags: [],
       project: {},
+      requests:{},
       requestingToProject: {},
       tagInput:'',
       searchBy: 'project',
@@ -44,7 +45,8 @@ class ProjectViewer extends Component {
       expanded: false,
       noteInput: '',
       note: '',
-      userProjects: []
+      userProjects: [],
+      img: []
     }
     options = [ 'projects', 'user', 'both' ]
 
@@ -66,6 +68,9 @@ class ProjectViewer extends Component {
       this.getAllRequests();
       this.getUserProjects();
       this.getAllTags();
+      if("currentUser" in window && window.currentUser){
+        this.loadImage(window.currentUser)
+      }
       console.log(this.state.userProjects)
       window.fs = new LightningFS('fs')
       window.pfs = window.fs.promises
@@ -321,21 +326,28 @@ class ProjectViewer extends Component {
 
     sendRequstWithNote(){
       var project = this.state.requestingToProject;
-      console.log(this.state.noteInput)
-      project.users.map(admin => {
-        fetch("http://127.0.0.1:8000/user/" + admin.name + "/requests", {  method: "POST",  headers: {  "Content-type": "application/json"  },  body: JSON.stringify({   project: project.name, user: this.currentUser.name, message: this.state.noteInput  })})
+      fetch("http://127.0.0.1:8000/project/" + this.state.requestingToProject.name + "/request", {  method: "POST",  headers: {  "Content-type": "application/json"  },  body: JSON.stringify({   project: project.name, user: window.currentUser, message: this.state.noteInput  })})
         .then(response => {
           console.log(response.status);     
           return response.json();  
         })
         .then(data => console.log(data));
 
-        fetch("http://127.0.0.1:8000/user/" + admin.name + "/notifications", {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({    message: this.currentUser.name + "wants to join your Project: " + project.name, user: admin.name, project:project.name  })})
+      project.users.map(admin => {
+        /*fetch("http://127.0.0.1:8000/user/" + admin.name + "/requests", {  method: "POST",  headers: {  "Content-type": "application/json"  },  body: JSON.stringify({   project: project.name, user: window.currentUser, message: this.state.noteInput  })})
         .then(response => {
           console.log(response.status);     
           return response.json();  
         })
-        publish("request-notifications-channel", {message: this.currentUser.name + "wants to collaborate on your project" + project, user: admin})
+        .then(data => console.log(data));
+        */
+
+        fetch("http://127.0.0.1:8000/user/" + admin.name + "/notifications", {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({    message: window.currentUser + "wants to join your Project: " + project.name, user: admin.name, project:project.name  })})
+        .then(response => {
+          console.log(response.status);     
+          return response.json();  
+        })
+        publish("request-notifications-channel", {message: window.currentUser + "wants to collaborate on your project" + project, user: admin})
       })
       this.setState({
         receivedRequests: this.state.receivedRequests.concat({request: project.name, user: this.currentUser.name, message: this.state.noteInput})
@@ -409,6 +421,19 @@ class ProjectViewer extends Component {
     })
     }
 
+    loadImage(){
+      fetch('http://127.0.0.1:8000/user/' + window.currentUser + '/image')
+      .then(res => {
+          return res.json() 
+      })
+      .then(img => {
+          console.log(img)
+          this.setState({
+              image: img
+          })
+      })
+    }
+
     getNewRequests(){
       fetch('http://127.0.0.1:8000/user/'+ this.currentUser +'/requests')
       .then(res => res.json())
@@ -418,6 +443,38 @@ class ProjectViewer extends Component {
         requests: this.state.requests.concat(requestsData)
        })
       })
+    }
+
+    getProjectRequests(project){
+      var len = 0
+      console.log(this.state.requests)
+      fetch('http://127.0.0.1:8000/project/'+ project.name +'/requests')
+      .then(res => res.json())
+      .then(requestsData => {
+       var hasProj = false
+       console.log(requestsData)
+       {/*this.state.requests.map(request=>{
+         if(request.project === project.name){
+           hasProj = true
+         }
+       })*/}
+       if(this.state.request && project.name in this.state.request){
+         hasProj = true
+       }
+       console.log(this.state.requests)
+       if(requestsData[0]?.request!==undefined && !hasProj){
+        console.log(this.state.requests)
+        var allRequests = {...this.state.requests}
+        //allRequests.push({project: project.name, total: requestsData.length})
+        allRequests[project.name] = requestsData.length
+        this.setState({
+          //requests: this.state.requests.concat(requestsData)
+          requests: allRequests
+        })
+        }
+        len = requestsData.length
+      })
+      return len
     }
 
     getDiscussions(){
@@ -498,13 +555,13 @@ class ProjectViewer extends Component {
       console.log(this.currentUser)
       var elem = this.state.showRequestModal
       ?
-       (<div style={{position: 'fixed'}}><Modal.Dialog style={{opacity: 1, position: 'fixed'}} className="is_shown ModalOpen">
-      <Modal.Header closeButton>
+       (<div className="fixedDiv"><Modal.Dialog style={{opacity: 1, position: 'fixed', margin: 'auto'}} className="is_shown ModalOpen">
+      <Modal.Header>
         <Modal.Title>Add note to your Request (Optional)</Modal.Title>
       </Modal.Header>
     
       <Modal.Body>
-        <input value={this.state.noteInput} onChange={this.getNote} placeholder="Note Description..."></input>
+        <TextArea value={this.state.noteInput} onChange={this.getNote} placeholder="Note Description..."></TextArea>
       </Modal.Body>
     
       <Modal.Footer>
@@ -513,8 +570,8 @@ class ProjectViewer extends Component {
       </Modal.Footer>
       </Modal.Dialog></div>)
 
-      : (<div><Modal.Dialog className="is-hidden is-visuallyHidden ">
-      <Modal.Header closeButton>
+      : (<div><Modal.Dialog className="is-hidden is-visuallyHidden " style={{opacity: 1, position: 'fixed', margin: 'auto'}}>
+      <Modal.Header>
         <Modal.Title>Add note to your Request (Optional)</Modal.Title>
       </Modal.Header>
     
@@ -540,6 +597,27 @@ class ProjectViewer extends Component {
       })
     }
 
+    renderProjectwithNotifications(project){
+      let projectRequests = 0
+      console.log(this.state.requests)
+      if(!(project.name in this.state.requests)){
+        projectRequests = this.getProjectRequests(project)
+        console.log(this.state.requests["collab"])
+      }
+      else projectRequests = this.state.requests[project]
+      
+      return (
+        <div class="rowC boldFont" style={{marginLeft: '50px', fontWeight: '100px'}}>
+          <NavLink to={"/projects/"+project.name}>{project.name}</NavLink>
+
+          {this.state.requests[project.name]>0?
+            (<div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{this.state.requests[project.name]}</p></div>)
+            :''
+          }
+
+        </div>)
+    }
+
     render() {
         return(
           <div>
@@ -557,14 +635,25 @@ class ProjectViewer extends Component {
                     <Nav className="col-md-12 d-none d-md-block bg-l sidebar sidebarmain span pad">
                       <div className="sidebar-sticky"></div>
                       <h3>Your Repositories:</h3>
-                        {this.currentUser.projects.length < 5 ? 
-                          this.currentUser.projects && this.currentUser.projects.map(project => {
-                          return (<div class="rowC boldFont" style={{marginLeft: '50px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{0}</p></div></div>)
+                        {this.state.userProjects?.length <= 5 ? 
+                          this.state.userProjects && this.state.userProjects.map(project => {
+                            this.renderProjectwithNotifications(project)
+                            return (
+                              <div class="rowC boldFont" style={{marginLeft: '50px', fontWeight: '100px'}}>
+                                <NavLink to={"/projects/"+project.name}>{project.name}</NavLink>
+                      
+                                {this.state.requests[project.name]>0?
+                                  (<div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{this.state.requests[project.name]}</p></div>)
+                                  :''
+                                }
+                      
+                              </div>)
                         })
                         :
-                          this.currentUser.projects && this.currentUser.projects.slice(0,5).map(project => {
-                          return (<><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle"><p>{this.getNewRequests(project)}</p></div></>)
-                          })
+                        this.state.userProjects && this.state.userProjects.slice(0,5).map(project => {
+                          //return (<div class="rowC boldFont" style={{marginLeft: '50px', fontWeight: '100px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{()=>this.getProjectRequests(project)}</p></div></div>)
+                          return this.renderProjectwithNotifications(project)
+                        })
                       }
                       <hr></hr>
                       <h3>Latest Discussions:</h3>
@@ -582,13 +671,13 @@ class ProjectViewer extends Component {
                       <div style={{ width: '20rem', paddingLeft:'30px' }}>
                         <Dropdown2 placeholder={"Add Tags to improve Search.."} onChange={(e,d)=>this.setTags(e,d)} onSearchChange={(e)=>this.onSearchChange(e)} search fluid multiple selection options={this.state.options} value={this.state.tags} ></Dropdown2>
                       </div>
-                      <div style={{ width: '50rem', padding: '0 0 5px 5px'}}>
+                      <div style={{ width: '50rem', padding: '0 0 5px 5px', display: 'inline-block'}}>
                         <SearchBar button={true} inputValue={this.state.inputValue}
                                     searchSimilarProject={this.searchSimilarProject} onChange={this.onInputChange} searchBy={this.state.searchBy}/>
                       </div>
-                      <Dropdown1>
+                      <Dropdown1 className="attachedBtn">
                         <Dropdown1.Toggle variant="success" id="dropdown-basic">
-                          Filter Search by:
+                          Filter by
                         </Dropdown1.Toggle>
 
                         <Dropdown1.Menu>

@@ -28,17 +28,25 @@ class User extends Component {
         editInterest: "",
         editingDescription: false,
         messageList: [],
-        image: null
+        image: null,
+        img1: {}
     }
 
     onImageChange = event => {
         if (event.target.files && event.target.files[0]) {
+          console.log(event.target.files[0])
           let img = event.target.files[0];
-
+          let form_data = new FormData();
+          form_data.append('image', img);
+          form_data.append('user', this.props.match.params.name);
+          form_data.append('url', "holla2423423");
           this.setState({
-            image: URL.createObjectURL(img)
+            image: URL.createObjectURL(img),
+            img1: img
+            //image: img
           }, () => {
-            fetch('http://127.0.0.1:8000/user/' + this.props.match.params.name + '/image', {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ user: this.props.match.params.name, img: img, uri:this.state.image })})
+            console.log(this.state.img1)
+            fetch('http://127.0.0.1:8000/user/' + this.props.match.params.name + '/image', {  method: "POST",  body: form_data})
           });
           //fetch('http://127.0.0.1:8000/user/' + this.props.match.params.name + '/image', {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ user: this.props.match.params.name, img: img, uri:this.state.image })})
         }
@@ -52,7 +60,7 @@ class User extends Component {
         .then(img => {
             console.log(img)
             this.setState({
-                image: img
+                image: img.image
             })
         })
     }
@@ -159,9 +167,18 @@ class User extends Component {
                 {this.state.user.projects? this.state.user.projects.map(project => {
                     {console.log(project.name)}
                     return (    
-                        <Card style={{ width: 'auto', margin: '10px 10px 10px 10px' }}>
+                        <Card style={{ width: 'auto', margin: '10px 10px 10px 10px', color: 'white' }}>
                             <Card.Body>
                                 <Card.Title><Link to={`/projects/${project.name}`}>{project.name}</Link></Card.Title>
+                                <div class="rowC">
+                                {project && project.tags.map(tag => {
+                                    console.log(tag);
+                                    console.log("HuHUoooo")
+                                    return (<div right="true">
+                                        <p className={"tag"}>{tag.tagName}</p>
+                                    </div>)
+                                })}
+                                </div>
                                 <Card.Text>{project.detail}</Card.Text>    
                             </Card.Body>
                         </Card>
@@ -224,16 +241,21 @@ class User extends Component {
     return(
         <div className="user">
             <div className={"user-info"}>
-                    <div style={{color: "white", fontSize: "medium", fontWeight: '600'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications}/></div>
+                    <div style={{color: "white", fontSize: "medium", fontWeight: '600'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications} noProfile={true}/></div>
                     <NavbarUser openRepo={this.openRepo.bind(this)} openRequest={this.openRequest.bind(this)} user={this.props.match.params.name || this.props.user} openChat={this.openChat}></NavbarUser>
                     {console.log(this.state.tab)}
                     <div class="col-md-12 d-none d-md-block bg-user sidebar span nav white">
                         {/*<div className="user-img-div">
                         <img className="user-img" src={this.props.user.img} />
                         </div>*/}
-                        <img className="user-image" src={this.state.image} />
-                        <p>Edit</p>
-                        <input type="file" name="myImage" onChange={this.onImageChange} />
+                        {this.state.image === null?
+                            <img className="user-image" src={this.state.image} onClick={this.onImageChange} />
+                            :
+                            <div className="default-img" onClick={(e)=>this.onImageChange(e)}>
+                                <h1 onClick={(e)=>this.onImageChange(e)} className="font-fit">{this.props.match.params.name.split("/(\s+)/")[0].charAt(0).toUpperCase()}</h1>
+                            </div>
+                        }
+                        <input class="hidden-upload" type="file" name="myImage" accept="image/png, image/jpeg" onChange={this.onImageChange} />
                         <h2>{this.state.user.name} </h2>
                         {this.state.editingDescription?
                         <div>
@@ -243,7 +265,7 @@ class User extends Component {
                         :
                         <div>
                             <p>{this.state.user.description}</p>
-                            <Button onClick={this.editDescription}>Edit Descrption</Button>
+                            <Button style={{backgroundColor: 'green', color: 'white'}} onClick={this.editDescription}>Edit Descrption</Button>
                         </div>
                         }     
                         <h3>

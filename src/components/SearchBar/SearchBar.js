@@ -5,18 +5,17 @@ import FormControl from 'react-bootstrap/FormGroup'
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { Button, Checkbox, Form } from 'semantic-ui-react'
+import { FaSearch } from 'react-icons/fa'
 
 const SearchBar = (props) => {
     return (
         <React.Fragment>
             <Form>
-                <Form.Field>
-                    <input onChange={(e)=>props.onChange(e)} placeholder='Project Description..' />
+                <Form.Field style={{position: 'relative', left: '0px'}}>
+                    <input onChange={(e)=>props.onChange(e)} placeholder='Project Description..' ></input>
+                    <FaSearch onClick={()=>props.searchSimilarProject()} style={{position: 'absolute',right:'8px',top:'8px', cursor: 'pointer'}}></FaSearch>
                 </Form.Field>
-                {props.button && props.button === true && props.searchBy === "project"?
-                    (<Button onClick={()=>props.searchSimilarProject()} type='submit'>Search Similar Project</Button>):
-                    ''
-                }
+                
                 {props.button && props.button === true && props.searchBy === "people"?
                     (<Button onClick={()=>props.searchSimilarProject()} type='submit'>Search people with similar projects</Button>):
                     ''
@@ -24,6 +23,12 @@ const SearchBar = (props) => {
             </Form>
 
             {/*
+
+            {props.button && props.button === true && props.searchBy === "project"?
+                    (<Button onClick={()=>props.searchSimilarProject()} type='submit'>Search Similar Project</Button>):
+                    ''
+                }
+                
                         <form action="">
                 <input type="search" value ={props.inputValue}  onChange={props.searchSimilarProject}/>
                 <i class="fa fa-search"></i>

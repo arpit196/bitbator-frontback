@@ -581,9 +581,6 @@ class ProjectDetails extends Component {
               {/*this.state.gitRepo !== '' ? <div dangerouslySetInnerHTML={{__html:this.state.gitRepo.body.innerHTML}}/> : ''*/}
             </div>
               <Card>
-                <Card.Header style={{textAlign: 'left'}}>
-                  file name
-                </Card.Header>
                 <Card.Body>
                   {this.state.files.map(file => {
                     return (<div style={{textAlign: 'left'}}>
@@ -599,7 +596,12 @@ class ProjectDetails extends Component {
           <div class="center1"
                 >
           <Card style={{ width: '50rem' }}>
-            <Card.Header style={{borderRadius: '10px', textAlign: 'left'}}><h2>Description File</h2></Card.Header>
+            <Card.Header style={{borderRadius: '10px', textAlign: 'left'}}>
+              <h2>Description File</h2>
+              <div style={{zIndex: 10, position: 'absolute', right: 5, top: 3}}>
+                <Button onClick={this.editDescription}>Edit</Button>
+              </div>
+            </Card.Header>
             <Card.Body>
             { this.state.editing?
               (<>
@@ -608,10 +610,7 @@ class ProjectDetails extends Component {
               </>
               )
               :
-              (<div>
-                <h2>{this.state.project.description}</h2>
-                <Button onClick={this.editDescription}>Edit</Button>
-              </div>)
+              <h2>{this.state.project.description}</h2>
             }
             </Card.Body>
           </Card>

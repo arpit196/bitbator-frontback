@@ -12,6 +12,7 @@ from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from . helper.comparator import *
 from rest_framework.exceptions import APIException
 from . utility import *
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # Create your views here.
 
@@ -28,19 +29,24 @@ def createTagList(project):
 	return tag_list
 
 class ImageView(APIView):
+
+	parser_classes = (MultiPartParser, FormParser)
+
 	def get(self, request, name):
-		img = ImageField.objects.filter(user = name).first()
-		print(img.url)
-		return Response(img.url)
+		images = ImageField.objects.filter(user=name).first()
+		image = ImageSerializer(images)
+		return Response(image.data)
 
 	def post(self, request, name):
-		uri = request.data["uri"]
-		user = request.data["user"]
-		img = request.data["img"]
-		image = ImageField.objects.create(url=uri, user=user, image = img)
-		print(image.url)
-		image.save()
-		return HttpResponse(status=status.HTTP_200_OK)
+		print("Hi")
+		image = ImageSerializer(data=request.data)
+		print(image)
+		if image.is_valid():
+			image.save()
+			print(image)
+			return Response(image.data, status=status.HTTP_201_CREATED)
+		else:
+			return Response(image.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ReactView(APIView):
 	
@@ -89,7 +95,7 @@ class UserView(APIView):
 		return JsonResponse(data, safe=False)
 
 	def post(self, request):
-		user_object = User.objects.filter(name=str(name))
+		#user_object = User.objects.filter(name=str(name))
 		serializer = UserSerializer(data=request.data)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
@@ -147,8 +153,8 @@ class UsersView(APIView):
 		return Response(user_list)
 
 	def post(self, request):
-		user_object = User.objects.filter(name=str(name))
-		serializer = UserSerializer(data=request.data)
+		#user_object = User.objects.filter(name=str(name))
+		serializer = UserCreateSerializer(data=request.data)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response(serializer.data)
@@ -239,13 +245,14 @@ class RequestView(APIView):
 	
 	serializer_class = RequestSerializer
 
-	def get(self, request, user):
-		requests = Request.objects.filter(user = user)
+	def get(self, request, name):
+		requests = Request.objects.filter(project = name)
 			#requests = Request.objects.get(project = user)
 		response_list=[]
 		for request in requests:
 			response_list.append({"user": request.user, "request": request.project, "message": request.message})
 		#response = {"user": requests.user, "request": requests.project}
+		print(response_list)
 		return Response(response_list)
 
 	def post(self, request, user):

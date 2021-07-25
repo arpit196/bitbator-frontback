@@ -7,6 +7,7 @@ import '../App.js';
 import { autoBind } from 'react-autobind/lib/autoBind'
 import Urlify from 'urlify'
 import Linkify from 'react-linkify';
+import {IoIosAirplane} from 'react-icons/io'
 
 class ProjectDiscussions extends Component {
     state = {
@@ -140,12 +141,14 @@ class ProjectDiscussions extends Component {
                    })
                   }
               </div>
-              <div class="rowC" style={{bottom: '30px', position: 'bottom'}}>
+              <div class="rowC" style={{bottom: '30px', left: '100px', position: 'absolute'}}>
                   <Form.Group controlId="formBasicEmail">
+                    <div class="rowC">
                     <Form.Control style={{width: '1000px'}} value={this.state.inputValue} onChange={this.updateInputValue} type="email" placeholder="Enter message relevant to the project.." />
-                    <Button onClick={this.publishMessage} variant="primary" type="submit">
-                      Send
+                    <Button style={{margin: '10px', borderRadius: '50%'}} onClick={this.publishMessage} variant="primary" type="submit">
+                      <IoIosAirplane />
                     </Button>
+                    </div>
                   </Form.Group>
               </div>
           </div>
