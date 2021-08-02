@@ -66,16 +66,16 @@ class User extends Component {
     }
 
     loadUser(user){
-        console.log(user)
-        console.log("Hullla")
-        console.log(window)
         fetch('http://127.0.0.1:8000/user/' + user)
         .then(res => res.json())
         .then(userData => {
-        console.log(userData[0])
-        this.setState({
-            user: userData[0]
-        }, console.log(this.state.user))
+            console.log(userData[0])
+            this.setState({
+                user: userData[0],
+                interests: this.state.interests.concat(userData[0].interests)
+            },()=>{console.log(this.state.user)})
+        },()=>
+            {this.setState({interests: this.state.interests.concat(this.state.user.interests)})
         })
     }
 

@@ -13,6 +13,7 @@ from . helper.comparator import *
 from rest_framework.exceptions import APIException
 from . utility import *
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.db.models import Q
 
 # Create your views here.
 
@@ -113,13 +114,17 @@ class UserView(APIView):
 	def patch(self, request, name):
 		user_object = User.objects.filter(name=str(name)).first()
 		print(user_object)
-		print("Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
 		data = request.data
 		#serializer = ReactSerializer(data=request.data)
 		project=None
 
 		if("project" in data.keys()):
 			project = Project.objects.get(name=data["project"])
+
+		if("interest" in data.keys()):
+			interest = Interest.objects.create(interests = data["interest"])
+			user_object.interests.add(interest)
+			print(data["interest"])
 		#project = {"name" : data["name"], "detail" : data["description"]}
 		
 		#if(data["visible"]):
@@ -129,6 +134,8 @@ class UserView(APIView):
 		#		project["access"]: data["access"]
 		
 		#user_object[0].projects.add(project)
+		print(user_object.interests)
+		
 		if("seenNotifications" in data.keys()):
 			user_object.seenNotifications = int(data["seenNotifications"])
 			print(data["seenNotifications"])
@@ -147,12 +154,24 @@ class UsersView(APIView):
 	#serializer_class = ReactSerializer
 
 	def get(self, request):
+		user = User.objects.all()
+		data = UserSerializer(user, many=True).data
+		print(data)
+		return JsonResponse(data, safe=False)
+
+		'''
 		users = User.objects.all()
 		#data = UserSerializer(users, many=True).data
-		user_list = [ {"name": user.name, "description": user.description} for user in users]
+		user_list = []
+		for user in users:
+			interest_list = [user.interests for interest in user.interests.all()]
+			user_list.append({"name": user.name, "description": user.description, "interest": interest_list})
+		#user_list = [ {"name": user.name, "description": user.description, "interest": user.interests} for user in users]
 		return Response(user_list)
+		'''
 
 	def post(self, request):
+		print(request.data)
 		#user_object = User.objects.filter(name=str(name))
 		serializer = UserCreateSerializer(data=request.data)
 		if serializer.is_valid(raise_exception=True):
@@ -241,13 +260,36 @@ class ProjectView(APIView):
 			project.delete()
 		return Response(status=204)
 
+class RequestUserView(APIView):
+	
+	serializer_class = RequestUserSerializer
+
+	def get(self, request, name):
+		requests = Request.objects.filter( Q(receiver = name) | Q(user = name))
+		response_list=[]
+		for request in requests:
+			response_list.append({"user": request.user, "request": request.project, "message": request.message})
+		#response = {"user": requests.user, "request": requests.project}
+		print(response_list)
+		return Response(response_list)
+	
+	def post(self, request, name):
+		print(request.data)
+		serializer = RequestUserSerializer(data=request.data)
+		if serializer.is_valid(raise_exception=True):
+			serializer.save()
+			return Response(serializer.data)
+
 class RequestView(APIView):
 	
 	serializer_class = RequestSerializer
 
 	def get(self, request, name):
+
 		requests = Request.objects.filter(project = name)
 			#requests = Request.objects.get(project = user)
+		if not requests:
+			requests = Request.objects.filter(user = name)
 		response_list=[]
 		for request in requests:
 			response_list.append({"user": request.user, "request": request.project, "message": request.message})
@@ -255,22 +297,22 @@ class RequestView(APIView):
 		print(response_list)
 		return Response(response_list)
 
-	def post(self, request, user):
+	def post(self, request, name):
 		print(request.data)
 		serializer = RequestSerializer(data=request.data)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response(serializer.data)
 	
-	def delete(self, request, user):
+	def delete(self, request, name):
 		print(request.data)
 		project = request.data["project"]
-		requests = Request.objects.filter(user = user,project = project)
+		requests = Request.objects.filter(user = name,project = project)
 		print(requests)
 		print("mnnneerer")
 		for request in requests:
 			request.delete()
-		requests = Request.objects.filter(user = user,project = project)
+		requests = Request.objects.filter(user = name,project = project)
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class NotificationsView(APIView):
@@ -281,12 +323,14 @@ class NotificationsView(APIView):
 		notifications = Notification.objects.filter(user = user)
 		notifications_list=[]
 		for notification in notifications:
-			notifications_list.append({"message": notification.message, "user": notification.user, "project": notification.project})
+			notifications_list.append({"message": notification.message, "user": notification.user, "project": notification.project, "timestamp": notification.timestamp})
 		return JsonResponse(notifications_list, safe=False)
 
 	def post(self, request, user):
 		print(request.data)
-		serializer = NotificationSerializer(data=request.data)
+		notification_data = request.data
+		notification_data['timestamp'] = datetime.now()
+		serializer = NotificationSerializer(data=notification_data)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response(serializer.data)

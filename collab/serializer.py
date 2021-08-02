@@ -27,18 +27,22 @@ class UserSerializer(serializers.ModelSerializer):
     projects = ReactSerializer(many=True)
     class Meta:
         model = User
-        fields = ('projects', 'name', 'description', 'seenNotifications',)
+        fields = ('projects', 'name', 'description', 'seenNotifications', 'interests',)
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    projects = ReactSerializer(many=True)
     class Meta:
         model = User
-        fields = ('name', 'description')
+        fields = ('name', 'description', 'visible',)
 
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
         fields = ['project', 'user', 'message',]
+
+class RequestUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = ['project', 'user', 'message', 'receiver', ]
 
 class LoginSerializer(serializers.ModelSerializer):
     class Meta:
@@ -53,7 +57,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
-        fields = ['message', 'project', 'user',]
+        fields = ['message', 'project', 'user', 'timestamp', ]
 
 class DiscussionsSerializer(serializers.ModelSerializer):
     class Meta:

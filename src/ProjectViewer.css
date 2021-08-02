@@ -5,6 +5,13 @@
     border-radius: 10px;
   }
 
+.colC{
+  flex: 1; /* additionally, equal width */
+  
+  padding: 1em;
+  border: solid;
+}
+
 .sidebarmain
 {
     display: flex;
@@ -97,4 +104,16 @@ a:hover{
   border-bottom-right-radius: 5px;
   border-top-left-radius: 0px;
   border-top-right-radius: 5px;
+}
+
+.ui.form{
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.special-leftcurved{
+  border-bottom-right-radius: 0px;
+  border-top-right-radius: 0px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
 }

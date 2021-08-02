@@ -24,7 +24,7 @@ import './CreateRepository.css'
 const animatedComponents = makeAnimated();
 document.body.style.background = "white";
 class CreateRepository extends Component {
-    fs = new LightningFS('fs')
+    fs = new LightningFS('fs', {wipe: true})
     pfs = this.fs.promises
     dir = '/newRepo'
     currentUser = "Rohit"
@@ -41,7 +41,7 @@ class CreateRepository extends Component {
         selectedAdmins: [],
         access: '',
         tag_options : [
-            {label: "tag", value: "Machine L"}, {tag: "tag", value: "Developer"}
+            {label: "Machine L", value: "Machine L"}, {label: "Web Developer", value: "Web Developer"}
         ]
     }
 
@@ -56,6 +56,7 @@ class CreateRepository extends Component {
 
     constructor(props){
         super(props)
+        console.log(localStorage.getItem("username"))
         this.showOptions = this.showOptions.bind(this)
         this.showTagOptions = this.showTagOptions.bind(this)
         this.addTags = this.addTags.bind(this)
@@ -78,7 +79,7 @@ class CreateRepository extends Component {
         .then(tags => {
           tags.map(tag=>{
             var tagName = tag.name
-            this.setState({tag_options: this.state.tag_options.concat({key: tagName, value: tagName})})
+            this.setState({tag_options: this.state.tag_options.concat({label: tagName, value: tagName})})
           })
         })
     }
@@ -87,12 +88,19 @@ class CreateRepository extends Component {
         let fs = this.fs
         let pfs = this.pfs
         let dir = this.dir
+        let url = `https://github.com/arpit196/${this.state.name}`
         await git.init({fs, dir: '/newRepo'})
+        const response = await git.addRemote({ fs, dir, url, remote: 'origin' })
+        console.log(response)
         await pfs.writeFile(`${this.dir}/README.md`, 'Very short README', 'utf8')
+        var fetch = await git.fetch({ http, fs, dir, ref: 'master', depth: 1 })
+        console.log(fetch)
+        var checked = await git.checkout({ fs, dir, ref: 'master', noCheckout: true })
+        console.log(checked)
         await git.add({fs, dir, filepath: 'README.md'})
         await git.commit({fs,dir: '/newRepo',message:'First commit', author: {
-            name: 'Mr. Test',
-            email: 'mrtest@example.com',
+            name: 'Arpit Rai',
+            email: 'arpitrai@gmail.com',
           }})
         
         /*await git.addRemote({
@@ -106,11 +114,9 @@ class CreateRepository extends Component {
             http,
             dir,
             corsProxy: 'https://cors.isomorphic-git.org',
-            url: `https://github.com/arpit196/${this.state.name}`,
-            ref: 'master',
             onAuth : () => ({
                 oauth2format: 'github',
-                token: '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'
+                token: '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'
             }),
         })
         console.log(response2)
@@ -123,7 +129,18 @@ class CreateRepository extends Component {
           return response.json();  
         })*/
         console.log(window.currentUser)
-        fetch('http://127.0.0.1:8000/wel/', {  method: "POST",  headers: { "Accept" : "application/json", "Content-type": "application/json" },  body: JSON.stringify({ name: this.state.name, detail:this.state.description, users: this.state.projectAdmins, tags:this.state.tags })})
+
+        this.state.projectAdmins.map(user => {
+            fetch('http://127.0.0.1:8000/user/'+user.name+'/requests', {  method: "POST",  headers: { "Accept" : "application/json", "Content-type": "application/json" },  body: JSON.stringify({ project: this.state.name, user: localStorage.getItem("username"), message: 'Please join my project: '+this.state.name, receiver: user.name })})
+            .then(res => res.json())
+            fetch("http://127.0.0.1:8000/user/" + user.name + "/notifications", {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({    message: window.currentUser || localStorage.getItem("username") + " has invited you to join his project: " + this.state.name, user: user.name, project:this.state.name  })})
+            .then(response => {
+                console.log(response.status);     
+                return response.json();  
+            })
+        })
+
+        fetch('http://127.0.0.1:8000/wel/', {  method: "POST",  headers: { "Accept" : "application/json", "Content-type": "application/json" },  body: JSON.stringify({ name: this.state.name, detail:this.state.description, users: this.state.projectAdmins, tags:this.state.tags, allowRequest:this.state.access })})
         .then(res => res.json())
         .then(userData => {
         console.log(userData[0])
@@ -131,13 +148,16 @@ class CreateRepository extends Component {
             user: userData[0]
         }, console.log(this.state.user))
         })
-        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name })})
+        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ user: localStorage.getItem("username") })})
         .then(res => res.json())
         .then(userData => {
         console.log(userData[0])
         this.setState({
             user: userData[0]
         }, console.log(this.state.user))
+        })
+        .then(()=>{
+            this.props.history.push("/projects/"+this.state.name)
         })
         fetch('http://127.0.0.1:8000/user/'+ window.currentUser, {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name, description:this.state.description })})
         .then(res => res.json())
@@ -147,7 +167,7 @@ class CreateRepository extends Component {
             user: userData[0]
         }, console.log(this.state.user))
         })
-        this.props.history.push("/projects/"+this.state.name)
+        
         this.gitSetup()
         
         /*await pfs.mkdir(dir);
@@ -227,15 +247,22 @@ class CreateRepository extends Component {
     }
 
     addadmins(){
-        console.log(this.state.selectedAdmins)
+        var adminsList = []
         this.state.selectedAdmins.forEach(user => {
-            if(this.state.projectAdmins.indexOf(user)===-1){
-                this.setState({
-                    projectAdmins: this.state.projectAdmins.concat({name:user.value, description: user.value})
-                })
+            var add = true;
+            for(var admin of this.state.projectAdmins){
+                if(admin.name === user.value){
+                    add = false;
+                    break;
+                }
+            }
+            if(add){
+                adminsList = adminsList.concat({name:user.value, description: user.value})
             }
         })
-        console.log(this.state.projectAdmins)
+        this.setState({
+            projectAdmins: this.state.projectAdmins.concat(adminsList)
+        })
         /*this.setState({
             admins: this.state.admins.concat(e)
         })*/
@@ -290,7 +317,6 @@ class CreateRepository extends Component {
                 }
             })
         }
-        console.log(this.state.admins)
     }
 
     manualAddedUser(e){
@@ -300,8 +326,9 @@ class CreateRepository extends Component {
 
             }
             this.setState({
-                selectedAdmins: this.state.selectedAdmins.concat({label: e, value: e})
-            })
+                //selectedAdmins: this.state.selectedAdmins.concat({tag: e.trim(),label: e.trim(), value: e.trim()})
+                selectedAdmins: this.state.selectedAdmins.concat({label: e.trim(), value: e.trim()})
+            },()=> (console.log(this.state.selectedAdmins)))
         }
     }
 
@@ -311,7 +338,7 @@ class CreateRepository extends Component {
 
             }
             this.setState({
-                selectedTags: this.state.selectedTags.concat({label: e, value: e})
+                selectedTags: this.state.selectedTags.concat({tag: e, value: e})
             })
         }
     }
@@ -319,6 +346,12 @@ class CreateRepository extends Component {
     deleteAdmin(admin){
         this.setState({
             projectAdmins: this.state.projectAdmins.filter(selectedAdmin => selectedAdmin !== admin)
+        })
+    }
+
+    deleteTag(tag){
+        this.setState({
+            selectedTags: this.state.selectedTags.filter(selectedTag => selectedTag !== tag)
         })
     }
 
@@ -339,10 +372,10 @@ class CreateRepository extends Component {
                         <div style={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
                             {/*<MultiSearchSelect searchable={true} showTags={true} multiSelect={true} width="500px" onSelect={this.showOptions} options={this.options}/>*/}
                             <Select
-                                style={{width: "800px", padding: "10px 10px 0 0"}}
+                                style={{width: "1200px", padding: "100px 100px 0 0"}}
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
-                                isMulti
+                                isMulti={true}
                                 options={this.option_list}
                                 onChange={this.showOptions}
                                 onInputChange={(e) => this.manualAddedUser(e)}
@@ -368,7 +401,7 @@ class CreateRepository extends Component {
                         <label style={{textAlign:'center'}}>Add Tags to your project (optional)</label>
                         { 
                             this.state.selectedTags.map( tag => {
-                                return (<Tags name={tag.value} close={this.deleteTag}></Tags>)
+                                return (<Tags name={tag.value} deleteTags={()=>this.deleteAdmin(tag)} delete={true}></Tags>)
                             })
                         }
                         <div style={{display: 'flex', justifyContent: 'center'}}>
@@ -377,7 +410,7 @@ class CreateRepository extends Component {
                                 style={{width: "800px", padding: "10px"}}
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
-                                isMulti
+                                isMulti={true}
                                 options={this.state.tag_options}
                                 onChange={this.showTagOptions}
                                 onInputChange={(e) => this.manualAddedTag(e)}

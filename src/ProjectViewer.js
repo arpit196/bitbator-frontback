@@ -317,7 +317,8 @@ class ProjectViewer extends Component {
     }
 
     closeNote(){
-      var container = document.body;
+      //var container = document.body;
+      var container = document.getElementById('project-viewer');
       container.classList.remove("is-blurred");
       this.setState({
         showRequestModal: false
@@ -326,7 +327,7 @@ class ProjectViewer extends Component {
 
     sendRequstWithNote(){
       var project = this.state.requestingToProject;
-      fetch("http://127.0.0.1:8000/project/" + this.state.requestingToProject.name + "/request", {  method: "POST",  headers: {  "Content-type": "application/json"  },  body: JSON.stringify({   project: project.name, user: window.currentUser, message: this.state.noteInput  })})
+      fetch("http://127.0.0.1:8000/project/" + this.state.requestingToProject.name + "/requests", {  method: "POST",  headers: {  "Content-type": "application/json"  },  body: JSON.stringify({   project: project.name, user: window.currentUser, message: this.state.noteInput  })})
         .then(response => {
           console.log(response.status);     
           return response.json();  

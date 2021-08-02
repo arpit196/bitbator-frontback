@@ -126,8 +126,8 @@ class ProjectDiscussions extends Component {
 
     render() {
         return(
-          <div class="rowR11">
-              <div className="discussions-details">
+          <div class="rowR11" style={{height:'450px'}}>
+              <div className="discussions-details" style={{height:'400px', display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                   {this.state.discussions.map(discussion => { 
                    return <Card style={{backgroundColor: 'RGB(37,211,102)', color: 'white', width: '800px', margin: '10px 10px 10px 10px', float: 'left'? discussion.user===window.currentUser: 'right'}}>
                      {

@@ -38,6 +38,13 @@ body {
   padding: 20px 20px 5px 5px;
 }
 
+.center2{
+  justify-content: center;
+  color: white;
+  background: white;
+  padding: 20px 20px 5px 5px;
+}
+
 .dropdown {
   padding: 3px 3px 3px 0px
 }

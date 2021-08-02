@@ -1,10 +1,13 @@
 from django.db import models
 from django.core.files import File  # you need this somewhere
 import urllib, os
+
+from django.db.models.fields import DateTimeField
+from datetime import datetime
   
 # Create your models here.
 
-class Interest:
+class Interest(models.Model):
     interests = models.CharField(max_length=300)
 
 class Tags(models.Model):
@@ -26,16 +29,17 @@ class Request(models.Model):
     user = models.CharField(max_length=30)
     project = models.CharField(max_length=100)
     message = models.CharField(max_length=600)
+    receiver = models.CharField(max_length=100, default='NA')
 
 class User(models.Model):
     name = models.CharField(max_length=30)
     description = models.CharField(max_length=500)
     projects = models.ManyToManyField(Project)
     requests = models.ManyToManyField(Request, related_name='+')
-    visible = models.BooleanField()
-    seenNotifications = models.IntegerField()
+    visible = models.BooleanField(default=True)
+    seenNotifications = models.IntegerField(default=0)
     allowRequest = models.BooleanField(default=True)
-    #interests = models.ManyToManyField(Interest)
+    interests = models.ManyToManyField('Interest')
     access = models.CharField(max_length=100)
 
 class LogIn(models.Model):
@@ -46,6 +50,7 @@ class Notification(models.Model):
     message = models.CharField(max_length=600)
     user = models.CharField(max_length=30)
     project = models.CharField(max_length=30)
+    timestamp = models.DateTimeField(default=datetime(2021, 1, 1, 12, 10, 6))
 
 class Discussions(models.Model):
     project = models.CharField(max_length=100)

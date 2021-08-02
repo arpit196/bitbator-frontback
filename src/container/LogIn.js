@@ -146,6 +146,7 @@ class LogIn extends React.Component {
                //this.props.setToken(data.token, data.user_id)
                console.log(data)
                window.currentUser = data.name
+               localStorage.setItem("username", data.name)
                this.props.history.push('/dashboard')
            }
        })
@@ -208,8 +209,8 @@ class LogIn extends React.Component {
            body: JSON.stringify(
                {
                 name: this.state.name,
-                descrption: this.state.description,
-                projects: {},
+                description: this.state.description,
+                visible: true
                }
            )
         }).then(res => res.json())

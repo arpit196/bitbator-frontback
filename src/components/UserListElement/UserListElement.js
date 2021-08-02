@@ -78,6 +78,13 @@ renderOnCondition(){
                <Card.Body>
                   <Card.Title><Link to={'/user/'+this.props.user.name}>{this.props.user.name}</Link></Card.Title>
                   <Card.Text>{this.props.user.description}</Card.Text>
+                  <Card.Text>Interests:</Card.Text>
+                  {this.props.user.interests.length>0 ? 
+                     this.props.user.interests.map(interest => {
+                     return <Card.Text>{interest}</Card.Text>
+                     })
+                     :''
+                  }
                </Card.Body>
             </Card>
          </div>  

@@ -181,14 +181,14 @@ class ProjectDetails extends Component {
 
     getRequests(){
       //this.gitSetup()
-      fetch("http://127.0.0.1:8000/project/" + this.props.name + "/request")
+      fetch("http://127.0.0.1:8000/project/" + this.props.name + "/requests")
       .then(response => {     
         return response.json();  
       })
       .then(data => this.setState({
         requests: data
       },() => this.getEnableRequest()));
-      console.log(this.state.requests)
+      console.log(this.state.requests+"projectRequests")
     }
 
     getEnableRequest(){
@@ -463,6 +463,10 @@ class ProjectDetails extends Component {
 
     acceptingRequest(request){
       helpers.acceptRequest(request)
+      var newRequests = [...this.state.requests]
+      var index = newRequests.indexOf(request)
+      newRequests.splice(index,1)
+      this.setState({requests : newRequests})
       this.setState({tab : "code"})
       this.getProjectUsers()
     }
@@ -534,52 +538,58 @@ class ProjectDetails extends Component {
       this.props.history.push('/dashboard')
     }
 
+    sortByTime(a, b){
+      console.log(a)
+      console.log("Happppppppppppppppppppppppppyyyyyyy")
+      return (new Date(a.timestamp) > new Date(b.timestamp))
+    }
+
     switchTab(){
         switch(this.state.tab){ 
           case "code": 
           return (
           <div class="rowC">
             <div >
-          <div class="center1">
+          <div class="center2">
+          <div className="leftComponent rowC">
+            <Dropdown1 class="dropdown">
+              <Dropdown1.Toggle variant="success" id="dropdown-basic">
+                {this.state.user}
+              </Dropdown1.Toggle>
+              {console.log(this.state.users)}
+              <Dropdown1.Menu>
+                {
+                  this.state.users.map(user => {
+                  return (<Dropdown1.Item onClick={(e)=>this.setUser(e, user)} id="dropdown-user">
+                    {user}
+                  </Dropdown1.Item>)
+                  })
+                }
+              </Dropdown1.Menu>
+            </Dropdown1>
+            <Dropdown1>
+              <Dropdown1.Toggle variant="success" id="dropdown-branch">
+              {this.state.currentBranch}
+              </Dropdown1.Toggle>
+              <Dropdown1.Menu>
+              <Dropdown1.Item>master</Dropdown1.Item>
+                {
+                  this.state.branches.map(branch => {
+                  return (<Dropdown1.Item onClick={() => this.openBranch(branch.name)} id="dropdown-user">
+                    {branch.name}
+                  </Dropdown1.Item>)
+                  })
+                }
+                {console.log(this.state.branchCreate)}
+                {this.branchCreationTab()}
+              </Dropdown1.Menu>
+            </Dropdown1>
+            {/*this.state.gitRepo !== '' ? <div dangerouslySetInnerHTML={{__html:this.state.gitRepo.body.innerHTML}}/> : ''*/}
+          </div>
           <Card style={{ width: '50rem' }}>
             <Card.Header style={{borderRadius: '10px'}}><h2>Github Repository for the project:</h2></Card.Header>
             <Card.Body>
             {this.state.project.repository}
-            <div className="leftComponent rowC">
-              <Dropdown1 class="dropdown">
-                <Dropdown1.Toggle variant="success" id="dropdown-basic">
-                  {this.state.user}
-                </Dropdown1.Toggle>
-                {console.log(this.state.users)}
-                <Dropdown1.Menu>
-                  {
-                    this.state.users.map(user => {
-                    return (<Dropdown1.Item onClick={(e)=>this.setUser(e, user)} id="dropdown-user">
-                      {user}
-                    </Dropdown1.Item>)
-                    })
-                  }
-                </Dropdown1.Menu>
-              </Dropdown1>
-              <Dropdown1>
-                <Dropdown1.Toggle variant="success" id="dropdown-branch">
-                {this.state.currentBranch}
-                </Dropdown1.Toggle>
-                <Dropdown1.Menu>
-                <Dropdown1.Item>master</Dropdown1.Item>
-                  {
-                    this.state.branches.map(branch => {
-                    return (<Dropdown1.Item onClick={() => this.openBranch(branch.name)} id="dropdown-user">
-                      {branch.name}
-                    </Dropdown1.Item>)
-                    })
-                  }
-                  {console.log(this.state.branchCreate)}
-                  {this.branchCreationTab()}
-                </Dropdown1.Menu>
-              </Dropdown1>
-              {/*this.state.gitRepo !== '' ? <div dangerouslySetInnerHTML={{__html:this.state.gitRepo.body.innerHTML}}/> : ''*/}
-            </div>
               <Card>
                 <Card.Body>
                   {this.state.files.map(file => {
@@ -619,6 +629,9 @@ class ProjectDetails extends Component {
         <div style={{marginLeft: '100px'}}>
         <h1>About</h1> 
         <div class="rowC">
+          {
+            
+          }
           {this.state.editingTags?
             <div>
               <div class="rowC">{this.state.editTags?.map(tag => {
@@ -637,7 +650,9 @@ class ProjectDetails extends Component {
             <div class="rowC">{this.state.project.tags?.map(tag => {
               return (<Tags name={tag.name} delete={false}></Tags>)
             })}</div>
-          </div>}
+          </div>
+          
+          }
         </div>
         </div>
         </div>)
@@ -660,7 +675,7 @@ class ProjectDetails extends Component {
             </div>
             :''
             }
-            {this.state.requests.map(request => {
+            {this.state.requests.sort(this.sortByTime).map(request => {
               return <div >
                 <Card style={{ width: '40rem', color: 'white', margin: '10px'}}>
                 <Card.Body>

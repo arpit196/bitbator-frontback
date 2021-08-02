@@ -51,7 +51,7 @@ class JoinRequest extends Component {
         console.log(error);
       }
     }*/
-
+    
     getRequests(){
       fetch('http://127.0.0.1:8000/user/'+ window.currentUser +'/requests')
       .then(res => res.json())

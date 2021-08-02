@@ -31,7 +31,7 @@ class SentRequests extends Component{
       return(
          <div className="react-list-select--item"> 
          <div className="request-item">
-            <div className={"request-info", "c"} style={{ width: '18rem' }}>
+            <div className={"request-info", "c"} style={{ width: '40rem' }}>
                   <Card>
                      <Card.Body>
                         <h2>Raised By You,</h2>
@@ -46,7 +46,7 @@ class SentRequests extends Component{
                         </Button>
                      </div>
 
-                     <div className="pad">
+                     <div className="pad" style={{margin: 'auto'}}>
                         <Button onClick={() => {this.props.remove(this.props.project)}}>
                            Withdraw Request
                         </Button>

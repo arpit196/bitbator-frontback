@@ -30,7 +30,7 @@ class ReceivedRequests extends Component{
                         <Link to={`/projects/${this.props.request.request}`}>{this.props.request.request}</Link>
                      </Card.Body>
                      {this.props.request.message?
-                     <Card>
+                     <Card style={{width: '100px', borderRadius: '10px', margin: 'auto'}}>
                         <Card.Header>
                            Note
                         </Card.Header>
@@ -46,7 +46,7 @@ class ReceivedRequests extends Component{
                         </Button>
                      </div>
 
-                     <div className="pad">
+                     <div className="pad" style={{margin: 'auto'}}>
                         <Button onClick={() => {this.props.remove(this.props.request)}}>
                            Decline
                         </Button>

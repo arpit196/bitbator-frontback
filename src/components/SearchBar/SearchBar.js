@@ -1,5 +1,6 @@
 import React from 'react'
-//import './SearchBar.css'
+import './SearchBar.css'
+//import '../../ProjectViewer.css'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormGroup'
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -12,7 +13,7 @@ const SearchBar = (props) => {
         <React.Fragment>
             <Form>
                 <Form.Field style={{position: 'relative', left: '0px'}}>
-                    <input onChange={(e)=>props.onChange(e)} placeholder='Project Description..' ></input>
+                    <input style={{borderBottomRightRadius: '0px', borderTopRightRadius: '0px', borderBottomLeftRadius: '5px', borderTopLeftRadius: '5px'}} className="special-leftcurved" onChange={(e)=>props.onChange(e)} placeholder='Project Description..' ></input>
                     <FaSearch onClick={()=>props.searchSimilarProject()} style={{position: 'absolute',right:'8px',top:'8px', cursor: 'pointer'}}></FaSearch>
                 </Form.Field>
                 

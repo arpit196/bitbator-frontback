@@ -87,15 +87,16 @@ const logOut = () =>{
 }
 
 const notificationItem = (notification) =>{
-	var message = "";
+	console.log(new Date(notification.timestamp).getTime())
+	let message="";
 	if(notification.message?.includes("join")){
-		var user= notification.message.substring(0,notification.message.indexOf("wants")-1)
+		var user= notification.message.substring(0,notification.message.indexOf("wants"))
 		var rest = notification.message.substring(notification.message.indexOf("wants"))
 		message = <Dropdown.Item><NavLink to={'/user/'+user}>{user}</NavLink>{rest}</Dropdown.Item>
 	}
 	if(notification.message?.includes("project")){
-		var rest = message.substring(0,notification.message.indexOf("project")+"project".length-1)
-		var project = message.substring(notification.message.indexOf("project")+"project".length)
+		var rest = notification.message.substring(0,notification.message.indexOf("project")+"project".length-1)
+		var project = notification.message.substring(notification.message.indexOf("project")+"project".length)
 		return <Dropdown.Item>{rest}<NavLink to={'/user/'+user}>{project}</NavLink></Dropdown.Item>
 	}
 	if(message !== ""){
@@ -128,6 +129,57 @@ const renderUnseenNotifications = () => {
 	else{
 		return ''
 	}
+}
+
+const sortByTime = (a, b) => {
+	if( a === undefined || b === undefined){
+		return 0
+	}
+	var d1 = new Date(a.timestamp).getTime()
+	var d2 = new Date(b.timestamp).getTime()
+
+	console.log(d1+" "+d2);
+	console.log(d1>d2);
+	console.log("Huiiiiiii")
+	return (d1 > d2)
+}
+
+const sortAndTrim = () => {
+	if(props.notifications){
+		var sorted = props.notifications?.sort(function(a,b){
+			if( a === undefined || b === undefined){
+				return 0
+			}
+			var d1 = new Date(a.timestamp).getTime()
+			var d2 = new Date(b.timestamp).getTime()
+		
+			console.log(d1+" "+a.user);
+			console.log(d1>d2);
+			console.log("Huiiiiiii")
+			return (d2 - d1)
+		})
+		console.log(sorted)
+		var render = []
+		sorted?.slice(0,8).map(notification=>{
+			console.log(notification)
+			render = render.concat(notificationItem(notification))
+		})
+		console.log(render)
+		return render
+	}
+	else{
+		var sorted = window.notifications?.sort((a,b)=>sortByTime(a,b))
+		var render = []
+		sorted?.slice(0,8).map(notification=>{
+			render = render.concat(notificationItem(notification))
+		})
+		console.log(render)
+		return render
+	}
+}
+
+const sortAndReturn = (notifications) => {
+	return notifications.sort(sortByTime())
 }
 
 return (
@@ -169,20 +221,13 @@ return (
 					<Dropdown text="Notifications">
 							<Dropdown.Toggle className="navDrop" onClickCapture={()=>changeSeen()} ><BellIcon width='30' height="30" active={true} color="white" /></Dropdown.Toggle>
 							<Dropdown.Menu>
-									{props.notifications ? props.notifications.map(notification=>{
-										return notificationItem(notification)
-									}):
-									window.notifications?.map(notification=>{
-										return notificationItem(notification)
-									})
-									}
+									{sortAndTrim()}
 							</Dropdown.Menu>
 					</Dropdown>{renderUnseenNotifications()}
 				</div>
 				:''
 				}
 			</div>
-			{console.log(window.currentUser)}
 			{props.request && props.request===true?
 				<React.Fragment>
 					<NavLink onClickCapture={() => changeSeenReq()} to='/requests' activeStyle>
@@ -212,7 +257,9 @@ return (
 				<div class="rowC">
 				{window.currentUser && !(props.noProfile === true)?
 				<NavBtn>
-				<NavBtnLink style={{borderRadius: '50%', marginBottom: '20px'}} to={'/user/' + window.currentUser}>Profile</NavBtnLink>
+				<NavBtnLink style={{borderRadius: '50%', backgroundColor: 'grey', marginBottom: '30px'}} to={'/user/' + window.currentUser}>
+                        <h1 className="font-fit2">{window.currentUser.split("/(\s+)/")[0].charAt(0).toUpperCase()}</h1>
+				</NavBtnLink>
 				</NavBtn>
 				:''
 				}
@@ -232,7 +279,8 @@ return (
 				<Dropdown style={{marginLeft: '100px', marginBottom: '10px'}}>
 					<Dropdown.Toggle style={{marginTop: '-8px'}} className="navDrop bigPlus" onClickCapture={()=>changeSeen()} ><FaPlus/></Dropdown.Toggle>
 					<Dropdown.Menu>
-						<Dropdown.Item eventKey="1" href={'/repository'}>Create Repository</Dropdown.Item>	
+						<Dropdown.Item eventKey="1" href={'/repository'}>Create Repository</Dropdown.Item>
+						<Dropdown.Item eventKey="2" href={'/repository'}>Import Git Repository</Dropdown.Item>	
 					</Dropdown.Menu>
 				</Dropdown>
 				:''

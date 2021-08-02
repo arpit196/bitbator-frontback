@@ -164,7 +164,8 @@
 	background-color: rgb(10, 80, 230);
 	height: fit-content;
 	border-radius: 30px;
-	padding: 3px
+	padding: 3px;
+	cursor: pointer;
   }
 
 .project-title:hover{

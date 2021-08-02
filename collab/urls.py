@@ -26,7 +26,7 @@ urlpatterns = [
     path('users/', UsersView.as_view()),
     path('user/<str:name>', UserView.as_view()),
     path('user/<str:name>/image', ImageView.as_view()),
-    path('user/<str:user>/requests', RequestView.as_view()),
+    path('user/<str:name>/requests', RequestUserView.as_view()),
     path('user/<str:user>/requests/<str:project>', RequestView.as_view()),
     #path('requests/', RequestView.as_view()),
     path('project/<str:project>/user/<str:name>/branch', BranchView.as_view()),

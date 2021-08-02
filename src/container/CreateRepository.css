@@ -7,7 +7,9 @@ label{
 }
 
 .form-check{
-    margin: 20px
+    margin: auto;
+    width: 200px;
+    text-align: center;
 }
 
 .form-label{
@@ -21,4 +23,8 @@ label{
 
 .css-2b097c-container{
     width: 100px;
+}
+
+.css-g1d714-ValueContainer{
+    padding: 20px  !important;
 }

@@ -49,6 +49,20 @@
 }
 
 .kZkOjx{
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
+
+.default-imgnav{
+    border-radius: 50%;
+    background-color: black;
+    color: white;
+    margin: auto;
+
+}
+
+.font-fit2{
+    font-size: 4vh;
+    color: gainsboro;
+    cursor: pointer;
+}

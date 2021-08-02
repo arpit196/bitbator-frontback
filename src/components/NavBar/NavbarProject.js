@@ -151,7 +151,9 @@ return (
 				Settings
 			</NavLinkwithOnClick>
 			{modifyRequest()}
-			
+			<NavLinkwithOnClick className={props.active === "commits" ? 'active' : null} style={{color: 'black'}} onClick={(e) => onSettings(e)}>
+				Add Collaborators
+			</NavLinkwithOnClick>
             {
 			console.log(currentUser.requests.filter(request => request.project === props.project.name).length>0)}
 			{/* Second Nav
