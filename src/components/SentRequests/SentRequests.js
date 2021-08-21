@@ -31,7 +31,7 @@ class SentRequests extends Component{
       return(
          <div className="react-list-select--item"> 
          <div className="request-item">
-            <div className={"request-info", "c"} style={{ width: '40rem' }}>
+            <div className={"request-info", "c"} style={{ width: '40rem', margin: '10px 500px 0px auto' }}>
                   <Card>
                      <Card.Body>
                         <h2>Raised By You,</h2>

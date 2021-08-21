@@ -57,6 +57,14 @@ class JoinRequest extends Component {
       .then(res => res.json())
       .then(requestsData => {
        console.log(requestsData)
+       requestsData = requestsData.sort(function(a,b){
+        if( a === undefined || b === undefined){
+          return 0
+        }
+        var d1 = new Date(a.timestamp).getTime()
+        var d2 = new Date(b.timestamp).getTime()
+        return (d2 - d1)
+      })
        this.setState({
         requests: this.state.requests.concat(requestsData),
         allRequests: this.state.allRequests.concat(requestsData)
@@ -128,7 +136,7 @@ class JoinRequest extends Component {
         .then(data => console.log(data));
 
         //add project to user
-        fetch("http://127.0.0.1:8000/user/"+request.request, {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({   project: request.request  })})
+        fetch("http://127.0.0.1:8000/user/"+window.currentUser || localStorage.getItem("username"), {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({   project: request.request  })})
         .then(response => {
           console.log(response.status);     
           return response.json();  

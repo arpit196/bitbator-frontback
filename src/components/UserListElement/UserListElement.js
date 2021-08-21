@@ -76,12 +76,16 @@ renderOnCondition(){
          <div className="clear"></div>*/}
             <Card onClick={e => this.openProfile(e)} style={{ width: '60rem' }}>
                <Card.Body>
-                  <Card.Title><Link to={'/user/'+this.props.user.name}>{this.props.user.name}</Link></Card.Title>
+                  <Card.Title style={{cursor: 'pointer'}}><Link to={'/user/'+this.props.user.name}>{this.props.user.name}</Link></Card.Title>
                   <Card.Text>{this.props.user.description}</Card.Text>
-                  <Card.Text>Interests:</Card.Text>
+                  {this.props.user.interests.length>0 ?
+                     <Card.Text>Interests:</Card.Text>
+                     :""
+                  }
+                  
                   {this.props.user.interests.length>0 ? 
                      this.props.user.interests.map(interest => {
-                     return <Card.Text>{interest}</Card.Text>
+                     return <Card.Text>{interest.interests}</Card.Text>
                      })
                      :''
                   }

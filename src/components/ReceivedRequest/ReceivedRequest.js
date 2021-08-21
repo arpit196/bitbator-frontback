@@ -5,6 +5,7 @@ import { Component } from 'react'
 import {Link} from 'react-router-dom'
 import { Button } from 'react-bootstrap'
 import { Card } from 'react-bootstrap'
+import './ReceivedRequest.css'
 
 class ReceivedRequests extends Component{
  
@@ -30,11 +31,11 @@ class ReceivedRequests extends Component{
                         <Link to={`/projects/${this.props.request.request}`}>{this.props.request.request}</Link>
                      </Card.Body>
                      {this.props.request.message?
-                     <Card style={{width: '100px', borderRadius: '10px', margin: 'auto'}}>
-                        <Card.Header>
+                     <Card style={{width: '100px', borderRadius: '10px', margin: 'auto', borderRadius: '30px'}}>
+                        <Card.Header style={{backgroundColor: 'blue'}}>
                            Note
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body style={{backgroundColor: 'white'}}>
                            {this.props.request.message}
                         </Card.Body>
                      </Card>
@@ -46,8 +47,8 @@ class ReceivedRequests extends Component{
                         </Button>
                      </div>
 
-                     <div className="pad" style={{margin: 'auto'}}>
-                        <Button onClick={() => {this.props.remove(this.props.request)}}>
+                     <div className="pad-right" >
+                        <Button onClick={() => {this.props.decline(this.props.request)}}>
                            Decline
                         </Button>
                      </div>

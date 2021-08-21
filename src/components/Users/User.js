@@ -275,7 +275,7 @@ class User extends Component {
                         <h3>Looking to Collaborate on:</h3>
                         <ul>
                         {this.state.interests.map(interest=>{
-                            return <li>{interest}</li>
+                            return <li>{interest.interests}</li>
                         })}
                         {this.state.addingInterests?
                             <>

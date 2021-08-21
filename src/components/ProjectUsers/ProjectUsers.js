@@ -69,7 +69,8 @@ class ProjectUsers extends Component {
             onSelect={selectedKey => alert(`selected ${selectedKey}`)}
             >
             <div className="sidebar-sticky"></div>
-            <h3>Project admins</h3>
+            <h3>Project admin</h3>
+            {this.props.admin}
             <h3>Users working on this</h3>
             {this.props.users.map(user => {
                 return (<div><Nav.Item>

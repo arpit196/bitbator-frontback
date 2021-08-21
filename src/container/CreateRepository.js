@@ -40,6 +40,7 @@ class CreateRepository extends Component {
         sortedUsers: [],
         selectedAdmins: [],
         access: '',
+        usersList: [],
         tag_options : [
             {label: "Machine L", value: "Machine L"}, {label: "Web Developer", value: "Web Developer"}
         ]
@@ -71,6 +72,18 @@ class CreateRepository extends Component {
         this.gitSetup = this.gitSetup.bind(this)
         this.getAllTags = this.getAllTags.bind(this)
         this.getAllTags()
+        this.getAllUsers()
+    }
+
+    getAllUsers(){
+        fetch('http://127.0.0.1:8000/users/')
+        .then(res => res.json())
+        .then(user => {
+            user.map(user=>{
+            var username = user.name
+            this.setState({usersList: this.state.usersList.concat({label: username, value: username})})
+          })
+        })
     }
 
     getAllTags(){
@@ -113,10 +126,9 @@ class CreateRepository extends Component {
             fs,
             http,
             dir,
-            corsProxy: 'https://cors.isomorphic-git.org',
             onAuth : () => ({
                 oauth2format: 'github',
-                token: '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'
+                token: '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'
             }),
         })
         console.log(response2)
@@ -140,15 +152,24 @@ class CreateRepository extends Component {
             })
         })
 
-        fetch('http://127.0.0.1:8000/wel/', {  method: "POST",  headers: { "Accept" : "application/json", "Content-type": "application/json" },  body: JSON.stringify({ name: this.state.name, detail:this.state.description, users: this.state.projectAdmins, tags:this.state.tags, allowRequest:this.state.access })})
+        fetch('http://127.0.0.1:8000/wel/', {  method: "POST",  headers: { "Accept" : "application/json", "Content-type": "application/json" },  body: JSON.stringify({ name: this.state.name, detail:this.state.description, users: window.currentUser || localStorage.getItem("username"), tags:this.state.tags, allowRequest:this.state.access })})
         .then(res => res.json())
         .then(userData => {
         console.log(userData[0])
         this.setState({
             user: userData[0]
-        }, console.log(this.state.user))
         })
-        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ user: localStorage.getItem("username") })})
+        },()=>
+            fetch('http://127.0.0.1:8000/user/'+ localStorage.getItem("username"), {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name, description:this.state.description })})
+            .then(res => res.json())
+            .then(userData => {
+            console.log(userData[0])
+            this.setState({
+                user: userData[0]
+            }, console.log(this.state.user))
+        }))
+
+        fetch('http://127.0.0.1:8000/project/'+ this.state.name + '/user', {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ user: localStorage.getItem("username") || window.currentUser })})
         .then(res => res.json())
         .then(userData => {
         console.log(userData[0])
@@ -159,14 +180,7 @@ class CreateRepository extends Component {
         .then(()=>{
             this.props.history.push("/projects/"+this.state.name)
         })
-        fetch('http://127.0.0.1:8000/user/'+ window.currentUser, {  method: "PATCH",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({ project: this.state.name, description:this.state.description })})
-        .then(res => res.json())
-        .then(userData => {
-        console.log(userData[0])
-        this.setState({
-            user: userData[0]
-        }, console.log(this.state.user))
-        })
+        console.log(localStorage.getItem("username"))
         
         this.gitSetup()
         
@@ -320,7 +334,7 @@ class CreateRepository extends Component {
     }
 
     manualAddedUser(e){
-        console.log(e)
+        console.log(e.slice(-1))
         if(e.endsWith(" ")){
             for(var i=0; i<this.options.length; i++){
 
@@ -376,13 +390,14 @@ class CreateRepository extends Component {
                                 closeMenuOnSelect={false}
                                 components={animatedComponents}
                                 isMulti={true}
-                                options={this.option_list}
+                                options={this.state.usersList}
                                 onChange={this.showOptions}
                                 onInputChange={(e) => this.manualAddedUser(e)}
                                 value={this.state.selectedAdmins}
                             />
                         </div>
                         <Button style={{marginTop : '8px'}} onClick={this.addadmins}>Add users</Button>
+                        <label style={{textAlign:'center'}}>users will get a request to join</label>
                         <div class="rowC">
                         {this.state.projectAdmins.map( tag => {
                                 return (<Tags style={{display: 'flex', margin: 'auto', justifyContent: 'center'}} deleteTags={()=>this.deleteAdmin(tag)} name={tag.name} delete={true}></Tags>)
@@ -433,31 +448,31 @@ class CreateRepository extends Component {
                         }
                     </Form.Field>
                     <FormRadio.Label>Set Access level to your Repositories</FormRadio.Label>
-                    <FormRadio.Check style={{color: 'black'}} name="access"
+                    <FormRadio.Check style={{color: 'black', margin: 'auto'}} name="access"
                                 type={this.type}
                                 id={`default-${this.type}`}
                                 label={"Myself"}
                                 onChange={()=>this.changeAccess("private")}>
                     </FormRadio.Check>
-                    <FormRadio.Check name="access"
+                    <FormRadio.Check style={{margin: 'auto'}} name="access"
                                 type={this.type}
                                 id={`default-${this.type}`}
                                 label={"Anyone on Collaborate"}
                                 onChange={()=>this.changeAccess("all")}>
                     </FormRadio.Check>
-                    <FormRadio.Check name="access"
+                    <FormRadio.Check className="middle" name="access"
                                 type={this.type}
                                 id={`default-${this.type}`}
                                 label={"People from my Organization"}
                                 onChange={()=>this.changeAccess("organization")}>
                     </FormRadio.Check>
-                    <FormRadio.Check name="access"
+                    <FormRadio.Check className="middle" name="access"
                                 type={this.type}
                                 id={`default-${this.type}`}
                                 label={"Connected to me"}
                                 onChange={()=>this.changeAccess("connections")}>
                     </FormRadio.Check>
-                    <Form.Button style={{color:'white', backgroundColor: 'black', marginBottom: '30px'}} onClick={this.createRepo}>Create Repository</Form.Button>
+                    <Form.Button style={{color:'white', backgroundColor: 'black', marginBottom: '30px', marginTop: '60px'}} onClick={this.createRepo}>Create Repository</Form.Button>
                 </Form>
             </div>
         )

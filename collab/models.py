@@ -14,7 +14,9 @@ class Tags(models.Model):
     tagName =  models.CharField(max_length=200, default="")  
   
 class Project(models.Model):
+    #admin = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
+    admin = models.CharField(max_length=100, default='N/A')
     detail = models.CharField(max_length=500)
     users = models.ManyToManyField('User')
     tags = models.ManyToManyField('Tags')
@@ -30,6 +32,7 @@ class Request(models.Model):
     project = models.CharField(max_length=100)
     message = models.CharField(max_length=600)
     receiver = models.CharField(max_length=100, default='NA')
+    timestamp = models.DateTimeField(default=datetime(2021, 1, 1, 12, 10, 6))
 
 class User(models.Model):
     name = models.CharField(max_length=30)
@@ -85,4 +88,7 @@ class ImageField(models.Model):
                     File(open(result[0], 'rb'))
                     )
             self.save()'''
+
+class File(models.Model):
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d')
     

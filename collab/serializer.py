@@ -16,15 +16,21 @@ class ReactSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     class Meta:
         model = Project
-        fields = ('name', 'detail', 'users', 'tags',)
+        fields = ('name', 'detail', 'users', 'tags', 'admin')
 
 class BranchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Branch
         fields = ('name', 'user', 'project',)
 
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interest
+        fields = ('interests',)
+
 class UserSerializer(serializers.ModelSerializer):
     projects = ReactSerializer(many=True)
+    interests = InterestSerializer(many=True)
     class Meta:
         model = User
         fields = ('projects', 'name', 'description', 'seenNotifications', 'interests',)
@@ -37,7 +43,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Request
-        fields = ['project', 'user', 'message',]
+        fields = ['project', 'user', 'message', 'timestamp', ]
 
 class RequestUserSerializer(serializers.ModelSerializer):
     class Meta:

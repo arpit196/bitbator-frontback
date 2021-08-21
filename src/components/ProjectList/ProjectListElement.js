@@ -30,6 +30,16 @@ renderOnCondition(){
          Cancel Request
       </Button>
    }
+   else if(this.props.status === "Request Received"){
+      return <Button style={{borderRadius: '20px', float: 'right', backgroundColor: 'Red'}} onClick={() => {this.props.cancelRequest(this.props.project)}}>
+         Accept Invite
+      </Button>
+   }
+   else if(this.props.project.allowRequest){
+      return <Button style={{borderRadius: '20px', float: 'right', backgroundColor: 'orange'}} onClick={() => {this.props.sendJoinRequest(this.props.project)}}>
+         Join Project <FaPlus style={{margin: '3px'}}></FaPlus> 
+      </Button>
+   }
    else if(this.props.project.allowRequest){
       return <Button style={{borderRadius: '20px', float: 'right', backgroundColor: 'orange'}} onClick={() => {this.props.sendJoinRequest(this.props.project)}}>
          Join Project <FaPlus style={{margin: '3px'}}></FaPlus> 

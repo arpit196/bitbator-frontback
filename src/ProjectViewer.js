@@ -16,6 +16,7 @@ import { Button } from 'react-bootstrap'
 import autoBind from 'react-autobind/lib/autoBind'
 import { FaCommentsDollar } from 'react-icons/fa'
 import LightningFS from '@isomorphic-git/lightning-fs'
+import helpers from './container/RequestHelper'
 
 //window.currentUser = 'arpit'
 class ProjectViewer extends Component {
@@ -30,6 +31,7 @@ class ProjectViewer extends Component {
       tags: [],
       project: {},
       requests:{},
+      sentRequests: [],
       requestingToProject: {},
       tagInput:'',
       searchBy: 'project',
@@ -38,6 +40,7 @@ class ProjectViewer extends Component {
       options:[{ key: 'webdevelopment', text: 'Web Development', value: 'Web Development' },
       { key: 'Machine Learning', text: 'Machine Learning', value: 'Machine Learning' },],
       notifications: [],
+      seen: 0,
       messages : {},
       receivedRequests: [],
       seenRequests: 0,
@@ -46,9 +49,12 @@ class ProjectViewer extends Component {
       noteInput: '',
       note: '',
       userProjects: [],
-      img: []
+      img: [],
+      showAllProjects: false,
+      interests: []
     }
     options = [ 'projects', 'user', 'both' ]
+    calledProjects = []
 
     constructor(props){
       super(props);        
@@ -82,9 +88,10 @@ class ProjectViewer extends Component {
       fetch('http://127.0.0.1:8000/user/'+window.currentUser)
         .then(res => res.json())
         .then(userData => {
-          console.log(userData)
+          localStorage.setItem("seen", userData[0].seenNotifications)
           this.setState({
-          userProjects: userData[0]?.projects
+          userProjects: userData[0]?.projects,
+          seen: userData[0].seenNotifications
         }, ()=> {console.log(this.state.userProjects)})
         }
         )
@@ -107,15 +114,23 @@ class ProjectViewer extends Component {
     }
     
     getAllRequests(){
-      fetch("http://127.0.0.1:8000/user/" + this.currentUser.name + "/requests")
+      fetch("http://127.0.0.1:8000/user/" + window.currentUser + "/requests")
         .then(response => {
-          console.log(response);     
           return response.json();  
         })
-        .then(data => {
-          console.log(data)
-          this.setState({
-            receivedRequests: this.state.receivedRequests.concat(data)
+        .then(requests => {
+          console.log(requests); 
+          requests.map(request => {
+            if(request.receiver?.toUpperCase() == window.currentUser?.toUpperCase()){
+              this.setState({
+                receivedRequests: this.state.receivedRequests.concat(request)
+              })
+            }
+            else{
+              this.setState({
+                sentRequests: this.state.sentRequests.concat(request)
+              })
+            }
           })
         });
     }
@@ -137,6 +152,7 @@ class ProjectViewer extends Component {
           notifications: this.state.notifications.concat(notificationsData)
         })
         window.notifications=notificationsData
+        
         })
         console.log(window.notifications)
     })
@@ -173,28 +189,37 @@ class ProjectViewer extends Component {
         var filterProjects = [...this.state.projects]
 
         var filterUsers = [...this.state.users]
-        if(this.state.searchBy === "user"){
-          var input = this.state.inputValue//.split()
-          filterUsers.filter(this.validUser).map(user => {
+        if(this.state.searchBy === "people"){
+          console.log("ARRRRR##################")
+          console.log(filterUsers)
+          var newFilteredUsers = []
+          var input = this.state.inputValue
+          filterUsers.map(user => {
             var similarity = 0
-            fetch('http://127.0.0.1:8000/compare/', {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({   searchInput: input, user: user, tags:this.state.options  })})
+            fetch('http://127.0.0.1:8000/compareUsers/', {  method: "POST",  headers: {    "Content-type": "application/json"  },  body: JSON.stringify({   searchInput: input, user: user, tags:this.state.options, interests:this.state.interests  })})
             .then(res => res.json())
             .then(similarityValue => {
               similarity = similarityValue
               user.similarity = similarity
+              console.log(user.name)
+              console.log(user.similarity)
+              newFilteredUsers = newFilteredUsers.concat(user)
             })
+            .then(
+              newFilteredUsers = this.state.users,
+              newFilteredUsers.sort(function(a,b){
+                return b.similarity - a.similarity 
+              }),
+              this.setState({
+                users: [...newFilteredUsers]
+              })
+            )
           })
-          filterUsers.sort(function(a,b){
-            return b.similarity - a.similarity 
-          })
-          this.setState({
-            users: [...filterUsers]
-          })
+          console.log(newFilteredUsers)
         }
         else{
           console.log(filterProjects)
-          var input = this.state.inputValue//.split()
-          //var newFiltered = []
+          var input = this.state.inputValue
           this.setState({projects: []})
           var projectWithSimTag = filterProjects.filter(project => this.similarTag(project))
           console.log(projectWithSimTag)
@@ -220,8 +245,6 @@ class ProjectViewer extends Component {
             .catch((error)=>console.log(error))
             return project
           })
-
-          console.log()
         }
         /*
         for(project in this.state.projects){
@@ -601,7 +624,8 @@ class ProjectViewer extends Component {
     renderProjectwithNotifications(project){
       let projectRequests = 0
       console.log(this.state.requests)
-      if(!(project.name in this.state.requests)){
+      if(!(this.calledProjects.includes(project.name))){
+        this.calledProjects = this.calledProjects.concat(project.name)
         projectRequests = this.getProjectRequests(project)
         console.log(this.state.requests["collab"])
       }
@@ -619,6 +643,12 @@ class ProjectViewer extends Component {
         </div>)
     }
 
+    showAll(){
+      this.setState({
+        showAllProjects: true
+      })
+    }
+
     render() {
         return(
           <div>
@@ -629,7 +659,7 @@ class ProjectViewer extends Component {
             </div>
             <div id="project-viewer" className="main">
               <div className={"project-container"}>
-                  <div style={{color: "white", fontSize: "medium", fontWeight: '600', marginLeft:'100px'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications}/></div>
+                  <div style={{color: "white", fontSize: "medium", fontWeight: '600', marginLeft:'100px'}}><Navbar2 notification={true} request={true} notifications={this.state.notifications} /></div>
                   <span></span>
                   <div>
                     <div class="rowC">
@@ -651,10 +681,23 @@ class ProjectViewer extends Component {
                               </div>)
                         })
                         :
-                        this.state.userProjects && this.state.userProjects.slice(0,5).map(project => {
+                        <div>
+                        {(this.state.userProjects && !this.state.showAllProjects) && this.state.userProjects.slice(0,5).map(project => {
                           //return (<div class="rowC boldFont" style={{marginLeft: '50px', fontWeight: '100px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{()=>this.getProjectRequests(project)}</p></div></div>)
                           return this.renderProjectwithNotifications(project)
                         })
+                        }
+                        {(this.state.userProjects && this.state.showAllProjects) && this.state.userProjects.map(project => {
+                          //return (<div class="rowC boldFont" style={{marginLeft: '50px', fontWeight: '100px'}}><NavLink to={"/projects/"+project.name}>{project.name}</NavLink><div class="circle" style={{margin: 'auto'}}><p style={{margin: 'auto', padding: '2px 2px 2px 2px'}}>{()=>this.getProjectRequests(project)}</p></div></div>)
+                          return this.renderProjectwithNotifications(project)
+                        })
+                        }
+
+                        {!this.state.showAllProjects?
+                          <NavLink to='#' style={{textAlign: 'right',color: 'black'}} onClick={()=>{this.showAll()}}>See more...</NavLink>
+                        : ''
+                        }
+                        </div>
                       }
                       <hr></hr>
                       <h3>Latest Discussions:</h3>
@@ -701,6 +744,9 @@ class ProjectViewer extends Component {
                           return <ProjectListElement project={project} key={project.id} openProject={() => this.openProject(project)} status={"Already Joined"} withdraw={this.withdraw} putTag={this.putTag}/>
                         }
                         else if(this.state.receivedRequests.filter(request=>request.request===project.name).length>0){
+                          return <ProjectListElement project={project} key={project.id} openProject={() => this.openProject(project)} status={"Request Received"} cancelRequest={()=>helpers.acceptRequest()} putTag={this.putTag}/>
+                        }
+                        else if(this.state.sentRequests.filter(request=>request.request===project.name).length>0){
                           return <ProjectListElement project={project} key={project.id} openProject={() => this.openProject(project)} status={"Request Sent"} cancelRequest={this.cancelRequest} putTag={this.putTag}/>
                         }
                         else if(project.allowRequest){

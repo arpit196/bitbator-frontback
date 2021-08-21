@@ -21,17 +21,22 @@ let history = useHistory();
 
 const [seen, setSeen] = useState(0)
 const [seenReq, setSeenReq] = useState(0)
+const [showAll, setShowAll] = useState(false)
 
 useEffect( () => {
-	fetch("http://127.0.0.1:8000/user/" + currentUser.name)
+	setSeen(localStorage.getItem("seen"))
+	fetch("http://127.0.0.1:8000/user/" + window.currentUser || localStorage.getItem("username"))
 	.then(res=>res.json())
 	.then(data => {
-		setSeen(data[0].seenNotifications)}
+		console.log(data)
+		if(data[0]){
+			setSeen(data[0].seenNotifications)}
+		}
 	)
 }, []);
 
 useEffect( () => {
-	fetch("http://127.0.0.1:8000/user/" + currentUser.name, {  method: "PATCH",  headers: {    "Content-type": "application/json"  }, body: JSON.stringify({ seenNotifications: seen })})
+	fetch("http://127.0.0.1:8000/user/" + window.currentUser, {  method: "PATCH",  headers: {    "Content-type": "application/json"  }, body: JSON.stringify({ seenNotifications: seen })})
 	.then(res=>res.json())
 	console.log(seen)
 }, [seen]);
@@ -66,6 +71,7 @@ const changeSeen = () => {
 		.then(data => setSeen(data.length))*/
 		
 		//.then(data => setSeen(data.length))
+		//fetch("http://127.0.0.1:8000/user/" + currentUser.name, {method : "PATCH", headers: {    "Content-type": "application/json"  }})
 	}
 	else{
 		localStorage.setItem('requests', 0)
@@ -95,7 +101,7 @@ const notificationItem = (notification) =>{
 		message = <Dropdown.Item><NavLink to={'/user/'+user}>{user}</NavLink>{rest}</Dropdown.Item>
 	}
 	if(notification.message?.includes("project")){
-		var rest = notification.message.substring(0,notification.message.indexOf("project")+"project".length-1)
+		var rest = notification.message.substring(0,notification.message.indexOf("project")+"project".length)
 		var project = notification.message.substring(notification.message.indexOf("project")+"project".length)
 		return <Dropdown.Item>{rest}<NavLink to={'/user/'+user}>{project}</NavLink></Dropdown.Item>
 	}
@@ -120,6 +126,8 @@ const displayNotification = () => {
 }
 
 const renderUnseenNotifications = () => {
+	console.log(props.notifications?.length)
+	console.log(seen)
 	if(props.notifications && props.notifications.length-seen>0){
 		return <div class="circle"><p>{props.notifications?.length - seen}</p></div>
 	}
@@ -137,11 +145,12 @@ const sortByTime = (a, b) => {
 	}
 	var d1 = new Date(a.timestamp).getTime()
 	var d2 = new Date(b.timestamp).getTime()
-
-	console.log(d1+" "+d2);
-	console.log(d1>d2);
-	console.log("Huiiiiiii")
 	return (d1 > d2)
+}
+
+const showEarlier = (e) => {
+	e.stopPropagation()
+	setShowAll(true)
 }
 
 const sortAndTrim = () => {
@@ -152,19 +161,25 @@ const sortAndTrim = () => {
 			}
 			var d1 = new Date(a.timestamp).getTime()
 			var d2 = new Date(b.timestamp).getTime()
-		
-			console.log(d1+" "+a.user);
-			console.log(d1>d2);
-			console.log("Huiiiiiii")
 			return (d2 - d1)
 		})
 		console.log(sorted)
 		var render = []
-		sorted?.slice(0,8).map(notification=>{
-			console.log(notification)
-			render = render.concat(notificationItem(notification))
-		})
-		console.log(render)
+		if(!showAll){
+			sorted?.slice(0,8).map(notification=>{
+				console.log(notification)
+				render = render.concat(notificationItem(notification))
+			})
+		}
+		else{
+			sorted?.map(notification=>{
+				console.log(notification)
+				render = render.concat(notificationItem(notification))
+			})
+		}
+		if(!showAll && sorted.length>8){
+			render = render.concat(<Dropdown.Item style={{textAlign: 'right'}} onClick={(e)=>showEarlier(e)}>Earlier...</Dropdown.Item>)
+		}
 		return render
 	}
 	else{
@@ -255,10 +270,10 @@ return (
 			</NavMenu>
 			<Dropdown  /*as={ButtonGroup}*/>
 				<div class="rowC">
-				{window.currentUser && !(props.noProfile === true)?
+				{(window.currentUser || localStorage.getItem("username")) && !(props.noProfile === true)?
 				<NavBtn>
-				<NavBtnLink style={{borderRadius: '50%', backgroundColor: 'grey', marginBottom: '30px'}} to={'/user/' + window.currentUser}>
-                        <h1 className="font-fit2">{window.currentUser.split("/(\s+)/")[0].charAt(0).toUpperCase()}</h1>
+				<NavBtnLink style={{borderRadius: '50%', backgroundColor: 'grey', marginTop: '-8px'}} to={'/user/' + window.currentUser}>
+                        <h1 className="font-fit2">{(window.currentUser || localStorage.getItem("username")).split("/(\s+)/")[0].charAt(0).toUpperCase()}</h1>
 				</NavBtnLink>
 				</NavBtn>
 				:''

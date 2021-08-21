@@ -32,13 +32,15 @@ import math
 #import official.nlp.modeling.models
 #import official.nlp.modeling.networks
 
+'''
 preprocess = hub.load('https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/1')
 encoder = hub.load('https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-256_A-4/2')
+
+'''
 dataset = api.load("text8")
 dct = Dictionary(dataset)
 corpus = [dct.doc2bow(line, allow_update=True) for line in dataset]
 model = TfidfModel(corpus)
-
 tag_dict = {}
 
 prototype_embeds = {}
@@ -75,24 +77,29 @@ def few_shot(input, project):
                     prototype_embeds[tag][0] = (prototype_embeds[tag][0]*prototype_embeds[tag][1] + pooled_project)/(prototype_embeds[tag][1]+1)
                     prototype_embeds[tag][1] +=1
 
-def compareUser(input, user, tags):
+def compareUser(input, user, tags, interests):
+    print(user)
+    input2_matrix = dct.doc2bow(pre_process(input).split())
 
-    input2 = pre_process(input).split()
-    input2_matrix = dct.doc2bow(pre_process(project.name))
-
-    user = dct.doc2bow(pre_process(user.name))
-    description = dct.doc2bow(pre_process(user.description))
+    user_name = dct.doc2bow(pre_process(user["name"]).split())
+    #description = dct.doc2bow(pre_process(user["description"]).split())
 
     maxScoreProject = 0
-    maxScoreCollab = 0
+    maxScoreInterest = 0
 
     #compare Projects
-    for project in user.projects :
-        project = dct.doc2bow(pre_process(project.name))
-        description = dct.doc2bow(pre_process(project.description))
+    for project in user["projects"] :
+        project_name = dct.doc2bow(pre_process(project["name"]).split())
+        #description = dct.doc2bow(pre_process(project["description"]).split())
         score = 0
+        
+        '''for (word, val) in input2_matrix:
+            for (word2, val2) in description:
+                if(word == word2):
+                    score = score + val*val2'''
+        
         for (word, val) in input2_matrix:
-            for (word2, val2) in description_matrix:
+            for (word2, val2) in project_name:
                 if(word == word2):
                     score = score + val*val2
         
@@ -101,11 +108,6 @@ def compareUser(input, user, tags):
             tfscoreInput = tfscoreInput + val*val
         
         tfscoreInput = math.sqrt(tfscoreInput)
-        
-        for (word, val) in input2_matrix:
-            for (word2, val2) in project_matrix:
-                if(word == word2):
-                    score = score + val*val2
         
         '''
         pooled_input = encoder(input2)["pooled_output"]
@@ -114,12 +116,12 @@ def compareUser(input, user, tags):
 
         #MLscore = cosine_similarity(pooled_input, pooled_project)
         
-        if(score>maxScoreProject):
-            maxScoreProject = score #+ MLscore
+        if(score>maxScoreInterest):
+            maxScoreInterest = score #+ MLscore
     
     #compare Interests
-    for collab in user.collab :
-        description = collab.description
+    for collab in user["interests"] :
+        description = dct.doc2bow(pre_process(collab['interests']).split())
         tfscoreInput = 0
         for (word, val) in input2_matrix:
             tfscoreInput = tfscoreInput + val*val
@@ -127,13 +129,15 @@ def compareUser(input, user, tags):
         tfscoreInput = math.sqrt(tfscoreInput)
         
         for (word, val) in input2_matrix:
-            for (word2, val2) in project_matrix:
+            for (word2, val2) in description:
                 if(word == word2):
                     score = score + val*val2
 
+        '''
         for tag in tags:
             if tag in user.tags:
                 score=score+1
+        '''
         
         '''
         pooled_input = encoder(input2)["pooled_output"]
@@ -142,10 +146,10 @@ def compareUser(input, user, tags):
         MLscore = cosine_similarity(pooled_input, pooled_project)
         '''
 
-        if(score>maxScoreCollab):
-            maxScoreCollab = score #+ MLscore
+        if(score>maxScoreInterest):
+            maxScoreInterest = score #+ MLscore
     
-    return maxScoreProject + maxScoreCollab
+    return maxScoreProject + maxScoreInterest
 
 '''def compareAll(input, projects, tags):
     scores = []

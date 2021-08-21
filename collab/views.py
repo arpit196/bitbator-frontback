@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from . models import *
+from . forms import *
 from rest_framework.response import Response
 from . serializer import *
 from django.http import JsonResponse
@@ -14,6 +15,12 @@ from rest_framework.exceptions import APIException
 from . utility import *
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.db.models import Q
+from .forms import UploadFileForm
+from django.http import HttpResponseRedirect
+
+
+# Imaginary function to handle an uploaded file.
+#from somewhere import handle_uploaded_file
 
 # Create your views here.
 
@@ -59,7 +66,7 @@ class ReactView(APIView):
 		for project in Project.objects.all():
 			user_list = createUserList(project)
 			tag_list = createTagList(project)
-			projects.append({"name": project.name,"detail": project.detail, "users": user_list, "allowRequest": project.allowRequest, "tags": tag_list})
+			projects.append({"name": project.name, "admin": project.admin, "detail": project.detail, "users": user_list, "allowRequest": project.allowRequest, "tags": tag_list})
 		
 		#detail = [ {"name": detail.name,"detail": detail.detail, "users": user_list}
 		#for detail in Project.objects.all()]
@@ -260,6 +267,15 @@ class ProjectView(APIView):
 			project.delete()
 		return Response(status=204)
 
+class FileView(APIView):
+	def post(self, request):
+		form = FileForm(request.POST, request.FILES)
+		if form.is_valid():
+			newdoc = File(docfile = request.FILES['docfile'])
+			newdoc.save()
+			return HttpResponseRedirect(reverse('myapp.views.list'))
+
+
 class RequestUserView(APIView):
 	
 	serializer_class = RequestUserSerializer
@@ -268,7 +284,7 @@ class RequestUserView(APIView):
 		requests = Request.objects.filter( Q(receiver = name) | Q(user = name))
 		response_list=[]
 		for request in requests:
-			response_list.append({"user": request.user, "request": request.project, "message": request.message})
+			response_list.append({"user": request.user, "request": request.project, "message": request.message, "receiver": request.receiver})
 		#response = {"user": requests.user, "request": requests.project}
 		print(response_list)
 		return Response(response_list)
@@ -279,6 +295,13 @@ class RequestUserView(APIView):
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
 			return Response(serializer.data)
+	
+	def delete(self, request, name):
+		project = request.data["project"]
+		requests = Request.objects.filter(user = name,project = project)
+		for request in requests:
+			request.delete()
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class RequestView(APIView):
 	
@@ -298,7 +321,9 @@ class RequestView(APIView):
 		return Response(response_list)
 
 	def post(self, request, name):
-		print(request.data)
+		#print(request.data)
+		request_data = request.data
+		request_data['timestamp'] = datetime.now()
 		serializer = RequestSerializer(data=request.data)
 		if serializer.is_valid(raise_exception=True):
 			serializer.save()
@@ -308,8 +333,6 @@ class RequestView(APIView):
 		print(request.data)
 		project = request.data["project"]
 		requests = Request.objects.filter(user = name,project = project)
-		print(requests)
-		print("mnnneerer")
 		for request in requests:
 			request.delete()
 		requests = Request.objects.filter(user = name,project = project)
@@ -422,6 +445,18 @@ def getProjectUsers(request, name):
 
 @api_view(('GET',))
 #@renderer_classes((JSONRenderer))
+def getReceivedRequests(request, name):
+	requests = Request.objects.get(receiver=name)
+	#return Response(projectUsers)
+	response_list=[]
+	for request in requests:
+		response_list.append({"user": request.user, "request": request.project, "message": request.message})
+	#response = {"user": requests.user, "request": requests.project}
+	print(response_list)
+	return Response(response_list)
+
+@api_view(('GET',))
+#@renderer_classes((JSONRenderer))
 def getProjectRequests(request, name):
 	requests = Request.objects.filter(project = name)
 	response_list=[]
@@ -451,3 +486,8 @@ def compareProjects(request):
 	score = compare(request.data["searchInput"], request.data["project"], request.data["tags"])
 	return Response(score)
 
+@api_view(('POST',))
+def compareUsers(request):
+	print(request)
+	score = compareUser(request.data["searchInput"], request.data["user"], request.data["tags"], request.data["interests"])
+	return Response(score)

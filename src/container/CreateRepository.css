@@ -28,3 +28,12 @@ label{
 .css-g1d714-ValueContainer{
     padding: 20px  !important;
 }
+
+.middle{
+    margin: 'auto' !important;
+    margin-bottom: '10px' !important;
+}
+
+.form-check{
+    margin: 'auto' !important
+}

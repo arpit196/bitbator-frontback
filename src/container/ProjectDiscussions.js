@@ -8,6 +8,7 @@ import { autoBind } from 'react-autobind/lib/autoBind'
 import Urlify from 'urlify'
 import Linkify from 'react-linkify';
 import {IoIosAirplane} from 'react-icons/io'
+import { GrAttachment} from 'react-icons/gr'
 
 class ProjectDiscussions extends Component {
     state = {
@@ -15,7 +16,8 @@ class ProjectDiscussions extends Component {
       users: [],
       discussions: [],
       requests: [],
-      inputValue: ''
+      inputValue: '',
+      selectedFile: null
     }
 
     /*urlify = Urlify.create(
@@ -34,6 +36,7 @@ class ProjectDiscussions extends Component {
       this.publishMessage = this.publishMessage.bind(this);
       this.subscriber = this.subscriber.bind(this);
       this.publishMessage = this.publishMessage.bind(this);
+      this.onFileChange = this.onFileChange.bind(this);
     }
 
     updateInputValue(evt){
@@ -124,6 +127,36 @@ class ProjectDiscussions extends Component {
       });
     }
 
+    onFileChange(e){
+      this.setState({selectedFile: e.target.files[0]}, 
+        ()=>{
+        const formData = new FormData();
+        formData.append(
+          "docFile",
+          this.state.selectedFile,
+          this.state.selectedFile.name
+        );
+        fetch('http://127.0.0.1:8000/projects/'+this.props.project+'/files', {method: 'POST', headers: {    "Content-type": "application/json"  }, body: formData})}
+      )
+    }
+
+    renderFileData(){
+      if (this.state.selectedFile) { 
+        return (
+          <div>
+            <h2>File Details:</h2>
+                <p>File Name: {this.state.selectedFile.name}</p>
+                <p>File Type: {this.state.selectedFile.type}</p>
+          </div>
+        );
+        /*publish("notifications-channel", {message: msg, user: window.currentUser ,project:this.props.project})
+        fetch("http://127.0.0.1:8000/project/" + this.props.project + "/discussions", {  method: "POST",  headers: {    "Content-type": "application/json"  }, body: JSON.stringify({   message: msg, user: window.currentUser  })})
+        .then(response => {    
+          return response.json();  
+        })*/
+        }
+    }
+
     render() {
         return(
           <div class="rowR11" style={{height:'450px'}}>
@@ -141,9 +174,12 @@ class ProjectDiscussions extends Component {
                    })
                   }
               </div>
+              {this.renderFileData()}
               <div class="rowC" style={{bottom: '30px', left: '100px', position: 'absolute'}}>
                   <Form.Group controlId="formBasicEmail">
                     <div class="rowC">
+                    <label htmlFor="fileInput" style={{borderRadius: '50%', backgroundColor: 'gray', width: '50px', height: '50px', cursor: 'pointer', marginRight: '30px'}}><GrAttachment style={{heigh: '45px', width: '45px'}}></GrAttachment></label>
+                    <input style={{display: 'none'}} id="fileInput" type="file" onChange={(e)=>this.onFileChange(e)}></input>
                     <Form.Control style={{width: '1000px'}} value={this.state.inputValue} onChange={this.updateInputValue} type="email" placeholder="Enter message relevant to the project.." />
                     <Button style={{margin: '10px', borderRadius: '50%'}} onClick={this.publishMessage} variant="primary" type="submit">
                       <IoIosAirplane />

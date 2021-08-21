@@ -31,6 +31,7 @@ const getCurrentUserRequests = () => {
 		console.log("requests")
 		setUserRequests(requests)
 		console.log(userRequests)
+		console.log(window.currentUser)
 	})
 }
 
@@ -63,8 +64,6 @@ const sendRequest = (project) => {
 	let request = {request: project.name, user: currentUser.name}
 	let newRequests = currentRequests.concat(request)
 	setUserRequests(newRequests)
-	console.log("Huiojisd")
-	console.log(newRequests)
 	helpers.sendJoinRequest(project)
 }
 
@@ -77,13 +76,19 @@ const onSettings = (e) => {
 }
 
 const modifyRequest = () => {
-	if(props.enableJoinProject && userRequests.filter(request => request.request === props.project.name).length>0){
+	if(props.enableJoinProject && userRequests.filter(request => request.request === props.project.name  && request.receiver !== window.currentUser).length>0){
 		return (<Button onClick={()=>helpers.removeRequest(userRequests.filter(request => request.request === props.project.name)[0])} style={{color: 'white', borderRadius: '20px', right: '100px', position: 'absolute'}}>
 			Withdraw Request
 		</Button>)
 	}
-	else if(props.enableJoinProject && !(userRequests.filter(request => request.request === props.project.name).length>0)){
+	else if(props.enableJoinProject && (userRequests.filter(request => request.request === props.project.name && request.receiver === window.currentUser).length>0)){
 		console.log(props.project)
+		var receivedReq = userRequests.filter(request => request.request === props.project.name && request.receiver === window.currentUser)[0]
+		return (<Button onClick={()=>helpers.acceptRequest(receivedReq)} style={{color: 'white', backgroundColor: 'blue', fontWeight: '600', borderRadius: '20px', right: '100px', position: 'absolute', backgroundColor: 'green'}}>
+			Accept Invitation
+		</Button>)
+	}
+	else if(props.enableJoinProject && !(userRequests.filter(request => request.request === props.project.name).length>0)){
 		return (<Button onClick={()=>sendRequest(props.project)} style={{color: 'white', backgroundColor: 'blue', fontWeight: '600', borderRadius: '20px', right: '100px', position: 'absolute'}}>
 			Send Join Request
 		</Button>)

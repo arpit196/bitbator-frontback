@@ -329,6 +329,7 @@ class ProjectDetails extends Component {
 
     openBranch(branch){
       this.setState({
+        isShow: false,
         currentBranch: branch
       })
       this.checkoutBranch(branch)
@@ -364,8 +365,8 @@ class ProjectDetails extends Component {
     }
 
     enableCreateBranch(e){
-      e.stopPropagation()
       this.setState({
+        isShow: true,
         branchCreate: true
       })
       console.log(this.state)
@@ -539,8 +540,6 @@ class ProjectDetails extends Component {
     }
 
     sortByTime(a, b){
-      console.log(a)
-      console.log("Happppppppppppppppppppppppppyyyyyyy")
       return (new Date(a.timestamp) > new Date(b.timestamp))
     }
 
@@ -567,7 +566,7 @@ class ProjectDetails extends Component {
                 }
               </Dropdown1.Menu>
             </Dropdown1>
-            <Dropdown1>
+            <Dropdown1 show={this.state.isShow}>
               <Dropdown1.Toggle variant="success" id="dropdown-branch">
               {this.state.currentBranch}
               </Dropdown1.Toggle>
